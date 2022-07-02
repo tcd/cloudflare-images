@@ -1,0 +1,12 @@
+{
+  "name": "cloudflare-images",
+  "version": "0.1.0",
+  "description": "",
+  "license": "MIT",
+  "keywords": [
+    "Cloudflare",
+    "Cloudflare Images"
+  ],
+  "scripts": {
+  },
+}
