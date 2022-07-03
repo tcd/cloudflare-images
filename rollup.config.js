@@ -9,11 +9,19 @@ const config = {
             format: "cjs",
             file: "./dist/index.cjs.js",
             exports: "named",
+            sourcemap: true,
         },
+    ],
+    external: [
+        "path",
+        "fs/promises",
+        "axios",
+        "form-data",
     ],
     plugins: [
         typescript({
             tsconfig: "tsconfig.prod.json",
+            sourceMap: false,
         }),
         commonjs({ extensions: [".ts"] }), // the ".ts" extension is required
     ],

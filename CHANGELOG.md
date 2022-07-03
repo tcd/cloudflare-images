@@ -8,7 +8,12 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 <!-- ## [Unreleased] -->
 
 
-## [0.1.1] - 2022-07-01
+## [0.2.0] - 2022-07-03
+### Added
+- Production code
+
+
+## [0.1.1] - 2022-07-03
 ### Added
 - Added initial code
 - Added changelog

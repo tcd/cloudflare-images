@@ -6,10 +6,15 @@
         "downlevelIteration": true,
         "declaration": true,
         "outDir": "dist",
+        "sourceMap": true,
         "rootDir": "src",
         "types": [
             "node",
         ],
+        "baseUrl": "./",
+        "paths": {
+            "cloudflare-images": ["./src/@types/cloudflare-images.d.ts"],
+        },
     },
     "include": [
         "./src/***.ts",

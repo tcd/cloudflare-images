@@ -1,6 +1,6 @@
 {
     "name": "cloudflare-images",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "description": "A wrapper around the Cloudflare Images API.",
     "license": "MIT",
     "repository": "github:tcd/cloudflare-images",
@@ -9,7 +9,6 @@
     "files": [
         "dist/**/*.js",
         "dist/**/*.js.map",
-        "dist/**/*.d.ts",
         "./src/@types/cloudflare-images.d.ts"
     ],
     "main": "./dist/index.cjs.js",
