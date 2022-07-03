@@ -1,9 +1,5 @@
 declare module "cloudflare-images" {
 
-    // =========================================================================
-    // Responses
-    // =========================================================================
-
     export interface CloudflareResponse<T = any> {
         result: T
         result_info: any
@@ -71,4 +67,70 @@ declare module "cloudflare-images" {
     export type CloudflareListImagesResponse   = CloudflareResponse<CloudflareImageListData>
     export type CloudflareImageDetailsResponse = CloudflareResponse<CloudflareImageData>
     export type CloudflareVariantResponse      = CloudflareResponse<CloudflareVariant>
+
+    // =========================================================================
+    // Requests
+    // =========================================================================
+
+    export interface ImageUploadRequest {
+        id: string
+        path: string
+    }
+
+    export interface ListImagesRequest {
+        /**
+         * Page number.
+         * @default 1
+         */
+        page?: number
+        /**
+         * Number of results per page. Max of 100.
+         * @default 100
+         */
+        per_page?: number
+    }
+
+    // =========================================================================
+    // Client
+    // =========================================================================
+
+    export interface CloudflareClientOptions {
+        apiKey: string
+        accountId: string
+    }
+
+    export class CloudflareClient {
+        constructor(options: CloudflareClientOptions)
+        /**
+         * Upload an image with up to 10 Megabytes using a single HTTP POST (multipart/form-data) request.
+         *
+         * [API Docs](https://api.cloudflare.com/#cloudflare-images-upload-an-image-using-a-single-http-request)
+         */
+        uploadImage(request: ImageUploadRequest): Promise<CloudflareUploadImageResponse>
+        /**
+         * List up to 100 images with one request. Use the optional parameters below to get a specific range of images.
+         *
+         * [API Docs](https://api.cloudflare.com/#cloudflare-images-list-images)
+         */
+        listImages(request: ListImagesRequest): Promise<CloudflareListImagesResponse>
+        /**
+         * Delete an image on Cloudflare Images. On success, all copies of the image are deleted and purged from cache.
+         *
+         * [API Docs](https://api.cloudflare.com/#cloudflare-images-delete-image)
+         */
+        deleteImage(imageId: string): Promise<CloudflareDeleteImageResponse>
+        /**
+         * Fetch details for a single image.
+         *
+         * [API Docs](https://api.cloudflare.com/#cloudflare-images-image-details)
+         */
+        getImageDetails(imageId: string): Promise<CloudflareImageDetailsResponse>
+        /**
+         * Fetch details for a single image.
+         *
+         * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-create-a-variant)
+         * [Cloudflare Docs](https://developers.cloudflare.com/images/cloudflare-images/transform/resize-images/)
+         */
+        createImageVariant(options: CloudflareVariant): Promise<CloudflareVariantResponse>
+    }
 }

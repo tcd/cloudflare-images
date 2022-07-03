@@ -6,19 +6,34 @@
     "repository": "github:tcd/cloudflare-images",
     "bugs": "https://github.com/tcd/cloudflare-images/issues",
     "author": "Clay Dunston <dunstontc@gmail.com>",
+    "files": [
+        "dist/**/*.js",
+        "dist/**/*.js.map",
+        "dist/**/*.d.ts",
+        "./src/@types/cloudflare-images.d.ts"
+    ],
+    "main": "./dist/index.cjs.js",
+    "types": "./src/@types/cloudflare-images.d.ts",
+    "typings": "./src/@types/cloudflare-images.d.ts",
+    "scripts": {
+        "build:rollup": "rollup -c rollup.config.js"
+    },
+    "dependencies": {
+        "axios": "^0.27.2",
+        "form-data": "^4.0.0",
+        "tslib": "^2.4.0"
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^22.0.1",
+        "@rollup/plugin-typescript": "^8.3.3",
+        "@types/node": "^18.0.0",
+        "rollup": "^2.75.7"
+    },
     "keywords": [
         "cloudflare",
         "Cloudflare",
         "Cloudflare Images",
         "API Client",
         "Assets"
-    ],
-    "scripts": {},
-    "dependencies": {
-        "axios": "^0.27.2",
-        "form-data": "^4.0.0"
-    },
-    "devDependencies": {
-        "@types/node": "^18.0.0"
-    }
+    ]
 }

@@ -10,18 +10,11 @@ import {
     CloudflareUploadImageResponse,
     CloudflareVariant,
     CloudflareVariantResponse,
-} from "cloudflare-images"
-import {
-    DEFAULT_LIST_IMAGES_REQUEST,
     ImageUploadRequest,
     ListImagesRequest,
-} from "./requests"
+    CloudflareClientOptions,
+} from "cloudflare-images"
 import { urlJoin } from "./url-join"
-
-export interface CloudflareClientOptions {
-    apiKey: string
-    accountId: string
-}
 
 /**
  * # Client for interacting with the Cloudflare API
@@ -42,12 +35,7 @@ export class CloudflareClient {
 
     constructor(options: CloudflareClientOptions) {
         this.options = options;
-
     }
-
-    private get apiKey(): string { return this.options.apiKey }
-
-    private get accountId(): string { return this.options.accountId }
 
     /**
      * Upload an image with up to 10 Megabytes using a single HTTP POST (multipart/form-data) request.
@@ -79,7 +67,7 @@ export class CloudflareClient {
      *
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-list-images)
      */
-    public async listImages(): Promise<CloudflareListImagesResponse> {
+    public async listImages(request: ListImagesRequest): Promise<CloudflareListImagesResponse> {
         const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
         try {
             const response = await axios.get<CloudflareListImagesResponse>(url, this.config())
@@ -162,11 +150,20 @@ export class CloudflareClient {
     // Helpers
     // =========================================================================
 
+    private get apiKey(): string { return this.options.apiKey }
+
+    private get accountId(): string { return this.options.accountId }
+
     private config(): AxiosRequestConfig {
         return {
             headers: {
                 "Authorization": `Bearer ${this.apiKey}`
             }
         }
+    }
+
+    private DEFAULT_LIST_IMAGES_REQUEST: ListImagesRequest = {
+        page: 1,
+        per_page: 100,
     }
 }

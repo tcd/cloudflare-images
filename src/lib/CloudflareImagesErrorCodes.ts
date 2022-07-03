@@ -1,4 +1,3 @@
-// Code	Description
 export const CloudflareImagesApiErrorCodes = {
     "5400": "Bad Request.",
     "5401": "Variant not found.",

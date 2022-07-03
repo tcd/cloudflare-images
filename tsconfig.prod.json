@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        // "target": "ES5",
+        "module": "ESNext",
+        "esModuleInterop": true,
+        "downlevelIteration": true,
+        "declaration": true,
+        "outDir": "dist",
+        "rootDir": "src",
+        "types": [
+            "node",
+        ],
+    },
+    "include": [
+        "./src/***.ts",
+    ],
+    "exclude": [
+        "test",
+        "ignore",
+        "dist",
+    ]
+}
