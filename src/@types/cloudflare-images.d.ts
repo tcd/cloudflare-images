@@ -21,6 +21,10 @@ declare module "cloudflare-images" {
         images: CloudflareImageData[]
     }
 
+    export interface CloudflareVariantListData {
+        variants: { [key: string]: CloudflareVariant }
+    }
+
     /** Image will be shrunk in size to fully fit within the given width or height, but will not be enlarged. */
     export type VariantFit_ScaleDown = "scale-down"
     /** Image will be resized (shrunk or enlarged) to be as large as possible within the given width or height while preserving the aspect ratio. */
@@ -67,7 +71,7 @@ declare module "cloudflare-images" {
     export type CloudflareListImagesResponse   = CloudflareResponse<CloudflareImageListData>
     export type CloudflareImageDetailsResponse = CloudflareResponse<CloudflareImageData>
     export type CloudflareVariantResponse      = CloudflareResponse<CloudflareVariant>
-    export type CloudflareListVariantsResponse = { variants: { [key: string]: CloudflareVariant } }
+    export type CloudflareListVariantsResponse = CloudflareResponse<CloudflareVariantListData>
 
     // =========================================================================
     // Requests
