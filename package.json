@@ -1,19 +1,19 @@
 {
     "name": "cloudflare-images",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "A wrapper around the Cloudflare Images API.",
     "license": "MIT",
     "repository": "github:tcd/cloudflare-images",
     "bugs": "https://github.com/tcd/cloudflare-images/issues",
     "author": "Clay Dunston <dunstontc@gmail.com>",
     "files": [
+        "dist",
         "dist/**/*.js",
         "dist/**/*.js.map",
-        "./src/@types/cloudflare-images.d.ts"
+        "dist/cloudflare-images.d.ts"
     ],
     "main": "./dist/index.cjs.js",
-    "types": "./src/@types/cloudflare-images.d.ts",
-    "typings": "./src/@types/cloudflare-images.d.ts",
+    "types": "dist/cloudflare-images.d.ts",
     "scripts": {
         "build:rollup": "rollup -c rollup.config.js"
     },

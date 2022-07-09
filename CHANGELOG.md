@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 <!-- ## [Unreleased] -->
 
 
+## [0.3.0] - 2022-07-09
+### Fixed
+- Deployed type definitions
+
+
 ## [0.2.0] - 2022-07-03
 ### Added
 - Production code
