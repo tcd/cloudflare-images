@@ -67,6 +67,7 @@ declare module "cloudflare-images" {
     export type CloudflareListImagesResponse   = CloudflareResponse<CloudflareImageListData>
     export type CloudflareImageDetailsResponse = CloudflareResponse<CloudflareImageData>
     export type CloudflareVariantResponse      = CloudflareResponse<CloudflareVariant>
+    export type CloudflareListVariantsResponse = { variants: { [key: string]: CloudflareVariant } }
 
     // =========================================================================
     // Requests
@@ -132,5 +133,11 @@ declare module "cloudflare-images" {
          * [Cloudflare Docs](https://developers.cloudflare.com/images/cloudflare-images/transform/resize-images/)
          */
         createImageVariant(options: CloudflareVariant): Promise<CloudflareVariantResponse>
+        /**
+         * Lists existing variants.
+         *
+         * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-list-variants)
+         */
+        listVariants(): Promise<CloudflareListVariantsResponse>
     }
 }

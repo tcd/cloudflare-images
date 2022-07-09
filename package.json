@@ -1,6 +1,6 @@
 {
     "name": "cloudflare-images",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "description": "A wrapper around the Cloudflare Images API.",
     "license": "MIT",
     "repository": "github:tcd/cloudflare-images",
@@ -15,7 +15,9 @@
     "main": "./dist/index.cjs.js",
     "types": "dist/cloudflare-images.d.ts",
     "scripts": {
-        "build:rollup": "rollup -c rollup.config.js"
+        "build": "npm run build:rollup && npm run build:types",
+        "build:rollup": "rollup -c rollup.config.js",
+        "build:types": "cross-env copyfiles ./src/@types/cloudflare-images.d.ts ./dist --flat"
     },
     "dependencies": {
         "axios": "^0.27.2",
@@ -26,6 +28,8 @@
         "@rollup/plugin-commonjs": "^22.0.1",
         "@rollup/plugin-typescript": "^8.3.3",
         "@types/node": "^18.0.0",
+        "copyfiles": "^2.4.1",
+        "cross-env": "^7.0.3",
         "rollup": "^2.75.7"
     },
     "keywords": [

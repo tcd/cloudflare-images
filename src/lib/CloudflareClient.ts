@@ -13,6 +13,7 @@ import {
     ImageUploadRequest,
     ListImagesRequest,
     CloudflareClientOptions,
+    CloudflareListVariantsResponse,
 } from "cloudflare-images"
 import { urlJoin } from "./url-join"
 
@@ -67,10 +68,17 @@ export class CloudflareClient {
      *
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-list-images)
      */
-    public async listImages(request: ListImagesRequest): Promise<CloudflareListImagesResponse> {
+    public async listImages(request: ListImagesRequest = {}): Promise<CloudflareListImagesResponse> {
         const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
+        const config: AxiosRequestConfig = {
+            ...this.config(),
+            params: {
+                ...this.DEFAULT_LIST_IMAGES_REQUEST,
+                ...request,
+            },
+        }
         try {
-            const response = await axios.get<CloudflareListImagesResponse>(url, this.config())
+            const response = await axios.get<CloudflareListImagesResponse>(url, config)
             // logger.debug({
             //     message: "Images Listed",
             //     responseData: response?.data
@@ -140,6 +148,26 @@ export class CloudflareClient {
             //     responseData: response?.data
             // })
             return response.data;
+        } catch (error) {
+            // logger.error(error)
+            throw error
+        }
+    }
+
+    /**
+     * Lists existing variants.
+     *
+     * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-list-variants)
+     */
+     public async listVariants(): Promise<CloudflareListVariantsResponse> {
+        const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants")
+        try {
+            const response = await axios.get<CloudflareListVariantsResponse>(url, this.config())
+            // logger.debug({
+            //     message: "Images Listed",
+            //     responseData: response?.data
+            // })
+            return response.data
         } catch (error) {
             // logger.error(error)
             throw error

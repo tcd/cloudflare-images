@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 <!-- ## [Unreleased] -->
 
 
+## [0.4.0] - 2022-07-09
+### Added
+- NPM script for building types
+- Add `CloudflareClient#listVariants`
+### Changed
+- Fixed default arguments for `CloudflareClient#listImages`
+
+
 ## [0.3.0] - 2022-07-09
 ### Fixed
 - Deployed type definitions
