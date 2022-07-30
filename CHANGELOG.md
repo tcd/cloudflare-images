@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 <!-- ## [Unreleased] -->
 
 
+## [0.5.0] - 2022-07-30
+### Added
+- Add `CloudflareClient#getStats`
+
+
 ## [0.4.1] - 2022-07-09
 ### Fixed
 - Type definition for `CloudflareClient#listVariants`

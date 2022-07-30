@@ -14,6 +14,7 @@ import {
     ListImagesRequest,
     CloudflareClientOptions,
     CloudflareListVariantsResponse,
+    CloudflareUsageStatisticsResponse,
 } from "cloudflare-images"
 import { urlJoin } from "./url-join"
 
@@ -165,6 +166,26 @@ export class CloudflareClient {
             const response = await axios.get<CloudflareListVariantsResponse>(url, this.config())
             // logger?.debug({
             //     message: "Images Listed",
+            //     responseData: response?.data
+            // })
+            return response.data
+        } catch (error) {
+            // logger?.error(error)
+            throw error
+        }
+    }
+
+    /**
+     * Fetch usage statistics details for Cloudflare Images.
+     *
+     * [API Docs](https://api.cloudflare.com/#cloudflare-images-images-usage-statistics)
+     */
+     public async getStats(): Promise<CloudflareUsageStatisticsResponse> {
+        const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "stats")
+        try {
+            const response = await axios.get<CloudflareUsageStatisticsResponse>(url, this.config())
+            // logger?.debug({
+            //     message: "Usage Statistics fetched",
             //     responseData: response?.data
             // })
             return response.data

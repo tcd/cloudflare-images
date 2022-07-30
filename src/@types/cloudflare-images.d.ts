@@ -21,6 +21,13 @@ declare module "cloudflare-images" {
         images: CloudflareImageData[]
     }
 
+    export interface CloudflareUsageStatisticsData {
+        count: {
+            current: number
+            allowed: number
+        }
+    }
+
     export interface CloudflareVariantListData {
         variants: { [key: string]: CloudflareVariant }
     }
@@ -66,12 +73,13 @@ declare module "cloudflare-images" {
         }
     }
 
-    export type CloudflareUploadImageResponse  = CloudflareResponse<CloudflareImageData>
-    export type CloudflareDeleteImageResponse  = CloudflareResponse
-    export type CloudflareListImagesResponse   = CloudflareResponse<CloudflareImageListData>
-    export type CloudflareImageDetailsResponse = CloudflareResponse<CloudflareImageData>
-    export type CloudflareVariantResponse      = CloudflareResponse<CloudflareVariant>
-    export type CloudflareListVariantsResponse = CloudflareResponse<CloudflareVariantListData>
+    export type CloudflareUploadImageResponse     = CloudflareResponse<CloudflareImageData>
+    export type CloudflareDeleteImageResponse     = CloudflareResponse
+    export type CloudflareListImagesResponse      = CloudflareResponse<CloudflareImageListData>
+    export type CloudflareImageDetailsResponse    = CloudflareResponse<CloudflareImageData>
+    export type CloudflareVariantResponse         = CloudflareResponse<CloudflareVariant>
+    export type CloudflareListVariantsResponse    = CloudflareResponse<CloudflareVariantListData>
+    export type CloudflareUsageStatisticsResponse = CloudflareResponse<CloudflareUsageStatisticsData>
 
     // =========================================================================
     // Requests
@@ -143,5 +151,11 @@ declare module "cloudflare-images" {
          * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-list-variants)
          */
         listVariants(): Promise<CloudflareListVariantsResponse>
+        /**
+         * Fetch usage statistics details for Cloudflare Images.
+         *
+         * [API Docs](https://api.cloudflare.com/#cloudflare-images-images-usage-statistics)
+         */
+        getStats(): Promise<CloudflareUsageStatisticsResponse>
     }
 }
