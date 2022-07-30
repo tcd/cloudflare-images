@@ -1,0 +1,32 @@
+{
+    "ts-node": {
+        "require": ["tsconfig-paths/register"],
+        "files": true,
+    },
+    "include": [
+        "src",
+        "test",
+    ],
+    "exclude": [
+        "ignore"
+    ],
+    "compilerOptions": {
+        "module": "CommonJS",
+        "target": "ES6",
+        "allowSyntheticDefaultImports": true,
+        "noImplicitAny": false,
+        "strict": false,
+        "strictPropertyInitialization": false,
+        "isolatedModules": false,
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "lib": [
+            "dom",
+            "esnext",
+        ],
+        "typeRoots": [
+            "./node_modules/@types",
+            "./src/@types",
+        ]
+    },
+}
