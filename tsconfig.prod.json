@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        // "target": "ES5",
+        "target": "ESNext",
         "module": "ESNext",
         "esModuleInterop": true,
         "downlevelIteration": true,
@@ -23,5 +23,6 @@
         "test",
         "ignore",
         "dist",
+        "scripts",
     ]
 }

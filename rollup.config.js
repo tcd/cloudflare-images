@@ -21,7 +21,7 @@ const config = {
     plugins: [
         typescript({
             tsconfig: "tsconfig.prod.json",
-            sourceMap: false,
+            sourceMap: true,
         }),
         commonjs({ extensions: [".ts"] }), // the ".ts" extension is required
     ],

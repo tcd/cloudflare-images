@@ -19,5 +19,8 @@
     ],
     "exclude": [
         "ignore",
+        "test",
+        "scripts",
+        "dist",
     ]
 }
