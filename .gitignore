@@ -1,4 +1,5 @@
 node_modules
 ignore
 dist
+build # compiled output for debugging
 .env

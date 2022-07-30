@@ -17,7 +17,7 @@
         "noImplicitAny": false,
         "strict": false,
         "strictPropertyInitialization": false,
-        "isolatedModules": false,
+        "isolatedModules": true,
         "experimentalDecorators": true,
         "sourceMap": true,
         "lib": [
