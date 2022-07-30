@@ -79,7 +79,6 @@ export class CloudflareClient {
         }
         try {
             const response = await axios.get<CloudflareListImagesResponse>(url, config)
-            debugger
             // logger?.debug({
             //     message: "Images Listed",
             //     responseData: response?.data
