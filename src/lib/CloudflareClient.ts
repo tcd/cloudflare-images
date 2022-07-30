@@ -52,13 +52,13 @@ export class CloudflareClient {
             formData.append("id", request.id)
             formData.append("file", file, fileName)
             const response = await axios.post<CloudflareUploadImageResponse>(url, formData, this.config())
-            // logger.debug({
+            // logger?.debug({
             //     message: "Image Uploaded",
             //     responseData: response?.data
             // })
             return response.data;
         } catch (error) {
-            // logger.error(error)
+            // logger?.error(error)
             throw error
         }
     }
@@ -79,13 +79,14 @@ export class CloudflareClient {
         }
         try {
             const response = await axios.get<CloudflareListImagesResponse>(url, config)
-            // logger.debug({
+            debugger
+            // logger?.debug({
             //     message: "Images Listed",
             //     responseData: response?.data
             // })
             return response.data
         } catch (error) {
-            // logger.error(error)
+            // logger?.error(error)
             throw error
         }
     }
@@ -99,14 +100,14 @@ export class CloudflareClient {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId)
             const response = await axios.delete<CloudflareDeleteImageResponse>(url, this.config())
-            // logger.debug({
+            // logger?.debug({
             //     message: "Image Deleted",
             //     imageId,
             //     responseData: response?.data
             // })
             return response.data;
         } catch (error) {
-            // logger.error(error)
+            // logger?.error(error)
             throw error
         }
     }
@@ -120,14 +121,14 @@ export class CloudflareClient {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId)
             const response = await axios.get<CloudflareImageDetailsResponse>(url, this.config())
-            // logger.debug({
+            // logger?.debug({
             //     message: "Image Details Fetched",
             //     imageId,
             //     responseData: response?.data
             // })
             return response.data;
         } catch (error) {
-            // logger.error(error)
+            // logger?.error(error)
             throw error
         }
     }
@@ -142,14 +143,14 @@ export class CloudflareClient {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants")
             const response = await axios.post<CloudflareVariantResponse>(url, this.config())
-            // logger.debug({
+            // logger?.debug({
             //     message: "Image Details Fetched",
             //     options,
             //     responseData: response?.data
             // })
             return response.data;
         } catch (error) {
-            // logger.error(error)
+            // logger?.error(error)
             throw error
         }
     }
@@ -163,13 +164,13 @@ export class CloudflareClient {
         const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants")
         try {
             const response = await axios.get<CloudflareListVariantsResponse>(url, this.config())
-            // logger.debug({
+            // logger?.debug({
             //     message: "Images Listed",
             //     responseData: response?.data
             // })
             return response.data
         } catch (error) {
-            // logger.error(error)
+            // logger?.error(error)
             throw error
         }
     }
