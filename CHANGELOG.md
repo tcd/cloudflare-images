@@ -5,12 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog][keep-a-changelog], and this project adheres to [Semantic Versioning][semver].
 
 
-<!-- ## [Unreleased] -->
+## [Unreleased]
 
 
-## [0.5.0] - 2022-07-30
+## [0.6.0-rc.1] - 2022-07-31
+### Changed
+- **BREAKING** Remove node dependencies; prioritize browser support
+- Alter params for `CloudflareClient#uploadFile`
 ### Added
 - Add ESLint
+### Fixed
+- Fixed links in `CHANGELOG.md`
 
 
 ## [0.5.0] - 2022-07-30
@@ -52,3 +57,13 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 ## [0.1.0] - 2022-07-01
 - Claimed package name on npm
 
+
+[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.6.0...HEAD
+[0.6.0-rc.1]: https://github.com/tcd/cloudflare-images/compare/v0.5.0...v0.6.0-rc.1
+[0.5.0]: https://github.com/tcd/cloudflare-images/compare/v0.4.1...v0.5.0
+[0.4.1]: https://github.com/tcd/cloudflare-images/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/tcd/cloudflare-images/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/tcd/cloudflare-images/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/tcd/cloudflare-images/compare/v0.1.1...v0.2.0
+[0.1.1]: https://github.com/tcd/cloudflare-images/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/tcd/cloudflare-images/releases/tag/v0.1.0

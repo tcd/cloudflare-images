@@ -1,5 +1,3 @@
-import { basename } from "path"
-import { readFile } from "fs/promises"
 import axios, { AxiosRequestConfig } from "axios"
 import FormData from "form-data"
 
@@ -17,18 +15,16 @@ import {
     CloudflareUsageStatisticsResponse,
 } from "cloudflare-images"
 import { urlJoin } from "./url-join"
+import { DEFAULT_REQUESTS } from "./default-requests"
 
 /**
- * # Client for interacting with the Cloudflare API
- *
- * This is a work in progress.
+ * Client for interacting with the Cloudflare API
  *
  * ## Reference
  *
  * - [API token permissions](https://developers.cloudflare.com/api/tokens/create/permissions/)
  * - [Cloudflare API v4 Documentation](https://api.cloudflare.com/)
  * - [Cloudflare API v4 Documentation - Cloudflare Images](https://api.cloudflare.com/#cloudflare-images-properties)
- * - [Send a File With Axios in Node.js](https://maximorlov.com/send-a-file-with-axios-in-nodejs/)
  */
 export class CloudflareClient {
 
@@ -47,11 +43,18 @@ export class CloudflareClient {
     public async uploadImage(request: ImageUploadRequest): Promise<CloudflareUploadImageResponse> {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
-            const fileName = basename(request.path)
-            const file = await readFile(request.path)
+            const {
+                id,
+                fileName,
+                fileData,
+                metadata,
+                requireSignedURLs,
+            } = { ...DEFAULT_REQUESTS.uploadImage, ...request }
             const formData = new FormData()
-            formData.append("id", request.id)
-            formData.append("file", file, fileName)
+            formData.append("id", id)
+            formData.append("file", fileData, fileName)
+            formData.append("metadata", JSON.stringify(metadata))
+            formData.append("requireSignedURLs", requireSignedURLs)
             const response = await axios.post<CloudflareUploadImageResponse>(url, formData, this.config())
             // logger?.debug({
             //     message: "Image Uploaded",
@@ -74,7 +77,7 @@ export class CloudflareClient {
         const config: AxiosRequestConfig = {
             ...this.config(),
             params: {
-                ...this.DEFAULT_LIST_IMAGES_REQUEST,
+                ...DEFAULT_REQUESTS.listImages,
                 ...request,
             },
         }
@@ -209,10 +212,5 @@ export class CloudflareClient {
                 "Authorization": `Bearer ${this.apiKey}`,
             },
         }
-    }
-
-    private DEFAULT_LIST_IMAGES_REQUEST: ListImagesRequest = {
-        page: 1,
-        per_page: 100,
     }
 }

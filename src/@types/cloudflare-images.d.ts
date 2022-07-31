@@ -87,7 +87,23 @@ declare module "cloudflare-images" {
 
     export interface ImageUploadRequest {
         id: string
-        path: string
+        fileName: string
+        fileData: Blob
+        /**
+         * User modifiable key-value store.
+         * Can use used for keeping references to another system of record for managing images.
+         */
+        metadata?: any
+        /**
+         * Indicates whether the image requires a signature token for the access.
+         * @default false
+         */
+        requireSignedURLs?: boolean
+        // /**
+        //  * A URL to fetch an image from origin.
+        //  * Mutually exclusive with `file` parameter.
+        //  */
+        // url?: string
     }
 
     export interface ListImagesRequest {
@@ -97,7 +113,8 @@ declare module "cloudflare-images" {
          */
         page?: number
         /**
-         * Number of results per page. Max of 100.
+         * Number of results per page.
+         * Min of 10, max of 100.
          * @default 100
          */
         per_page?: number
@@ -108,6 +125,9 @@ declare module "cloudflare-images" {
     // =========================================================================
 
     export interface CloudflareClientOptions {
+        /**
+         * API key generated on the [My Account](https://dash.cloudflare.com/profile/api-tokens) page.
+         */
         apiKey: string
         accountId: string
     }
