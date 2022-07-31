@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 ## [Unreleased]
 
 
+## [0.6.0-rc.3] - 2022-07-31
+### Fixed
+- Incorrect type definition
+
+
 ## [0.6.0-rc.2] - 2022-07-31
 ### Changed
 - **BREAKING** Refactor `Cloudflare` types namespace.

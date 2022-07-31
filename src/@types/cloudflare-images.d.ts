@@ -2,7 +2,7 @@ declare module "cloudflare-images" {
     export = Cloudflare;
     namespace Cloudflare {
 
-        export interface UsageStatistics {
+        export interface UsageStats {
             count: {
                 current: number
                 allowed: number
@@ -110,7 +110,7 @@ declare module "cloudflare-images" {
             export type ImageDetails    = Response<ImageData>
             export type Variant         = Response<Variants.Variant>
             export type ListVariants    = Response<Variants.VariantList>
-            export type UsageStatistics = Response<UsageStatistics>
+            export type UsageStatistics = Response<UsageStats>
         }
 
         // =====================================================================
