@@ -1,7 +1,5 @@
-// https://github.com/jfromaniello/url-join
-
 const normalize = (strArray: string[]): string => {
-    var resultArray: string[] = []
+    const resultArray: string[] = []
     if (strArray.length === 0) { return "" }
 
     if (typeof strArray[0] !== "string") {
@@ -10,7 +8,7 @@ const normalize = (strArray: string[]): string => {
 
     // If the first part is a plain protocol, we combine it with the next part.
     if (strArray[0].match(/^[^/:]+:\/*$/) && strArray.length > 1) {
-        var first = strArray.shift()
+        const first = strArray.shift()
         strArray[0] = first + strArray[0]
     }
 
@@ -21,8 +19,8 @@ const normalize = (strArray: string[]): string => {
         strArray[0] = strArray[0].replace(/^([^/:]+):\/*/, "$1://")
     }
 
-    for (var i = 0; i < strArray.length; i++) {
-        var component = strArray[i]
+    for (let i = 0; i < strArray.length; i++) {
+        let component = strArray[i]
 
         if (typeof component !== "string") {
             throw new TypeError("Url must be a string. Received " + component)
@@ -48,21 +46,24 @@ const normalize = (strArray: string[]): string => {
 
     }
 
-    var str = resultArray.join("/")
+    let str = resultArray.join("/")
     // Each input component is now separated by a single slash except the possible first plain protocol part.
 
     // remove trailing slash before parameters or hash
     str = str.replace(/\/(\?|&|#[^!])/g, "$1")
 
     // replace ? in parameters with &
-    var parts = str.split("?")
+    const parts = str.split("?")
     str = parts.shift() + (parts.length > 0 ? "?" : "") + parts.join("&")
 
     return str
 }
 
+/**
+ * https://github.com/jfromaniello/url-join
+ */
 export const urlJoin = function (...args: any): string {
-    var input
+    let input
 
     if (typeof args[0] === "object") {
         input = args[0]

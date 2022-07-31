@@ -1,6 +1,6 @@
 import { urlJoin } from "./url-join"
 
-const BASE_URL: string = "https://api.cloudflare.com/client/v4"
+const BASE_URL = "https://api.cloudflare.com/client/v4"
 
 export const CLOUDFLARE_URLS = {
     uploadImage:     (accountId: string)                  => urlJoin(BASE_URL, "accounts", accountId, "images", "v1"),

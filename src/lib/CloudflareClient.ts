@@ -32,11 +32,11 @@ import { urlJoin } from "./url-join"
  */
 export class CloudflareClient {
 
-    private BASE_URL: string = "https://api.cloudflare.com/client/v4"
+    private BASE_URL = "https://api.cloudflare.com/client/v4"
     private options: CloudflareClientOptions
 
     constructor(options: CloudflareClientOptions) {
-        this.options = options;
+        this.options = options
     }
 
     /**
@@ -48,8 +48,8 @@ export class CloudflareClient {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
             const fileName = basename(request.path)
-            const file = await readFile(request.path);
-            const formData = new FormData();
+            const file = await readFile(request.path)
+            const formData = new FormData()
             formData.append("id", request.id)
             formData.append("file", file, fileName)
             const response = await axios.post<CloudflareUploadImageResponse>(url, formData, this.config())
@@ -57,7 +57,7 @@ export class CloudflareClient {
             //     message: "Image Uploaded",
             //     responseData: response?.data
             // })
-            return response.data;
+            return response.data
         } catch (error) {
             // logger?.error(error)
             throw error
@@ -105,7 +105,7 @@ export class CloudflareClient {
             //     imageId,
             //     responseData: response?.data
             // })
-            return response.data;
+            return response.data
         } catch (error) {
             // logger?.error(error)
             throw error
@@ -126,7 +126,7 @@ export class CloudflareClient {
             //     imageId,
             //     responseData: response?.data
             // })
-            return response.data;
+            return response.data
         } catch (error) {
             // logger?.error(error)
             throw error
@@ -148,7 +148,7 @@ export class CloudflareClient {
             //     options,
             //     responseData: response?.data
             // })
-            return response.data;
+            return response.data
         } catch (error) {
             // logger?.error(error)
             throw error
@@ -160,7 +160,7 @@ export class CloudflareClient {
      *
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-list-variants)
      */
-     public async listVariants(): Promise<CloudflareListVariantsResponse> {
+    public async listVariants(): Promise<CloudflareListVariantsResponse> {
         const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants")
         try {
             const response = await axios.get<CloudflareListVariantsResponse>(url, this.config())
@@ -180,7 +180,7 @@ export class CloudflareClient {
      *
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-images-usage-statistics)
      */
-     public async getStats(): Promise<CloudflareUsageStatisticsResponse> {
+    public async getStats(): Promise<CloudflareUsageStatisticsResponse> {
         const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "stats")
         try {
             const response = await axios.get<CloudflareUsageStatisticsResponse>(url, this.config())
@@ -206,8 +206,8 @@ export class CloudflareClient {
     private config(): AxiosRequestConfig {
         return {
             headers: {
-                "Authorization": `Bearer ${this.apiKey}`
-            }
+                "Authorization": `Bearer ${this.apiKey}`,
+            },
         }
     }
 

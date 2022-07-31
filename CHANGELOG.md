@@ -10,6 +10,11 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 
 ## [0.5.0] - 2022-07-30
 ### Added
+- Add ESLint
+
+
+## [0.5.0] - 2022-07-30
+### Added
 - Add `CloudflareClient#getStats`
 - Add git tag script
 
