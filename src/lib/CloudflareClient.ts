@@ -2,17 +2,9 @@ import axios, { AxiosRequestConfig } from "axios"
 import FormData from "form-data"
 
 import {
-    CloudflareDeleteImageResponse,
-    CloudflareImageDetailsResponse,
-    CloudflareListImagesResponse,
-    CloudflareUploadImageResponse,
-    CloudflareVariant,
-    CloudflareVariantResponse,
-    ImageUploadRequest,
-    ListImagesRequest,
+    Requests,
+    Responses,
     CloudflareClientOptions,
-    CloudflareListVariantsResponse,
-    CloudflareUsageStatisticsResponse,
 } from "cloudflare-images"
 import { urlJoin } from "./url-join"
 import { DEFAULT_REQUESTS } from "./default-requests"
@@ -40,7 +32,7 @@ export class CloudflareClient {
      *
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-upload-an-image-using-a-single-http-request)
      */
-    public async uploadImage(request: ImageUploadRequest): Promise<CloudflareUploadImageResponse> {
+    public async uploadImage(request: Requests.ImageUpload): Promise<Responses.UploadImage> {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
             const {
@@ -55,7 +47,7 @@ export class CloudflareClient {
             formData.append("file", fileData, fileName)
             formData.append("metadata", JSON.stringify(metadata))
             formData.append("requireSignedURLs", requireSignedURLs)
-            const response = await axios.post<CloudflareUploadImageResponse>(url, formData, this.config())
+            const response = await axios.post<Responses.UploadImage>(url, formData, this.config())
             // logger?.debug({
             //     message: "Image Uploaded",
             //     responseData: response?.data
@@ -72,7 +64,7 @@ export class CloudflareClient {
      *
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-list-images)
      */
-    public async listImages(request: ListImagesRequest = {}): Promise<CloudflareListImagesResponse> {
+    public async listImages(request: Requests.ListImages = {}): Promise<Responses.ListImages> {
         const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
         const config: AxiosRequestConfig = {
             ...this.config(),
@@ -82,7 +74,7 @@ export class CloudflareClient {
             },
         }
         try {
-            const response = await axios.get<CloudflareListImagesResponse>(url, config)
+            const response = await axios.get<Responses.ListImages>(url, config)
             // logger?.debug({
             //     message: "Images Listed",
             //     responseData: response?.data
@@ -99,10 +91,10 @@ export class CloudflareClient {
      *
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-delete-image)
      */
-    public async deleteImage(imageId: string): Promise<CloudflareDeleteImageResponse> {
+    public async deleteImage(imageId: string): Promise<Responses.DeleteImage> {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId)
-            const response = await axios.delete<CloudflareDeleteImageResponse>(url, this.config())
+            const response = await axios.delete<Responses.DeleteImage>(url, this.config())
             // logger?.debug({
             //     message: "Image Deleted",
             //     imageId,
@@ -120,10 +112,10 @@ export class CloudflareClient {
      *
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-image-details)
      */
-    public async getImageDetails(imageId: string): Promise<CloudflareImageDetailsResponse> {
+    public async getImageDetails(imageId: string): Promise<Responses.ImageDetails> {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId)
-            const response = await axios.get<CloudflareImageDetailsResponse>(url, this.config())
+            const response = await axios.get<Responses.ImageDetails>(url, this.config())
             // logger?.debug({
             //     message: "Image Details Fetched",
             //     imageId,
@@ -142,10 +134,10 @@ export class CloudflareClient {
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-create-a-variant)
      * [Cloudflare Docs](https://developers.cloudflare.com/images/cloudflare-images/transform/resize-images/)
      */
-    public async createImageVariant(options: CloudflareVariant): Promise<CloudflareVariantResponse> {
+    public async createImageVariant(_options: Requests.CreateVariant): Promise<Responses.Variant> {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants")
-            const response = await axios.post<CloudflareVariantResponse>(url, this.config())
+            const response = await axios.post<Responses.Variant>(url, this.config())
             // logger?.debug({
             //     message: "Image Details Fetched",
             //     options,
@@ -163,10 +155,10 @@ export class CloudflareClient {
      *
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-list-variants)
      */
-    public async listVariants(): Promise<CloudflareListVariantsResponse> {
+    public async listVariants(): Promise<Responses.ListVariants> {
         const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants")
         try {
-            const response = await axios.get<CloudflareListVariantsResponse>(url, this.config())
+            const response = await axios.get<Responses.ListVariants>(url, this.config())
             // logger?.debug({
             //     message: "Images Listed",
             //     responseData: response?.data
@@ -183,10 +175,10 @@ export class CloudflareClient {
      *
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-images-usage-statistics)
      */
-    public async getStats(): Promise<CloudflareUsageStatisticsResponse> {
+    public async getStats(): Promise<Responses.UsageStatistics> {
         const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "stats")
         try {
-            const response = await axios.get<CloudflareUsageStatisticsResponse>(url, this.config())
+            const response = await axios.get<Responses.UsageStatistics>(url, this.config())
             // logger?.debug({
             //     message: "Usage Statistics fetched",
             //     responseData: response?.data

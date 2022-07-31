@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 ## [Unreleased]
 
 
+## [0.6.0-rc.2] - 2022-07-31
+### Changed
+- **BREAKING** Refactor `Cloudflare` types namespace.
+
+
 ## [0.6.0-rc.1] - 2022-07-31
 ### Changed
 - **BREAKING** Remove node dependencies; prioritize browser support

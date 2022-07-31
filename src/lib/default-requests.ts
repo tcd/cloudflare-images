@@ -1,9 +1,6 @@
-import {
-    ImageUploadRequest,
-    ListImagesRequest,
-} from "cloudflare-images"
+import { Requests } from "cloudflare-images"
 
-const imageUploadRequest: ImageUploadRequest = {
+const imageUploadRequest: Requests.ImageUpload = {
     id: null,
     fileName: null,
     fileData: null,
@@ -11,7 +8,7 @@ const imageUploadRequest: ImageUploadRequest = {
     requireSignedURLs: false,
 }
 
-const listImagesRequest: ListImagesRequest = {
+const listImagesRequest: Requests.ListImages = {
     page: 1,
     per_page: 100,
 }
