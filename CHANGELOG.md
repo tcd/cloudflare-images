@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 ## [Unreleased]
 
 
+## [0.6.1] - 2022-08-01
+### Fixed
+- Forgot to build code before publishing
+
+
 ## [0.6.0] - 2022-08-01
 ### Added
 - Added methods to `CloudflareClient`:
