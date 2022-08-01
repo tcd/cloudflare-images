@@ -5,6 +5,7 @@ import {
     Requests,
     Responses,
     CloudflareClientOptions,
+    Logging,
 } from "cloudflare-images"
 import { urlJoin } from "./url-join"
 import { DEFAULT_REQUESTS } from "./default-requests"
@@ -22,10 +23,16 @@ export class CloudflareClient {
 
     private BASE_URL = "https://api.cloudflare.com/client/v4"
     private options: CloudflareClientOptions
+    private logger?: Logging.ILogger
 
     constructor(options: CloudflareClientOptions) {
         this.options = options
+        this.logger = options?.logger ?? null
     }
+
+    // =========================================================================
+    // Images
+    // =========================================================================
 
     /**
      * Upload an image with up to 10 Megabytes using a single HTTP POST (multipart/form-data) request.
@@ -48,13 +55,13 @@ export class CloudflareClient {
             formData.append("metadata", JSON.stringify(metadata))
             formData.append("requireSignedURLs", requireSignedURLs)
             const response = await axios.post<Responses.UploadImage>(url, formData, this.config())
-            // logger?.debug({
+            // this.logger?.debug({
             //     message: "Image Uploaded",
-            //     responseData: response?.data
+            //     responseData: response?.data,
             // })
             return response.data
         } catch (error) {
-            // logger?.error(error)
+            // this.logger?.error(error)
             throw error
         }
     }
@@ -75,13 +82,34 @@ export class CloudflareClient {
         }
         try {
             const response = await axios.get<Responses.ListImages>(url, config)
-            // logger?.debug({
+            // this.logger?.debug({
             //     message: "Images Listed",
-            //     responseData: response?.data
+            //     responseData: response?.data,
             // })
             return response.data
         } catch (error) {
-            // logger?.error(error)
+            // this.logger?.error(error)
+            throw error
+        }
+    }
+
+    /**
+     * Fetch details for a single image.
+     *
+     * [API Docs](https://api.cloudflare.com/#cloudflare-images-image-details)
+     */
+    public async getImage(imageId: string): Promise<Responses.ImageDetails> {
+        try {
+            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId)
+            const response = await axios.get<Responses.ImageDetails>(url, this.config())
+            // this.logger?.debug({
+            //     message: "Image Details Fetched",
+            //     imageId,
+            //     responseData: response?.data,
+            // })
+            return response.data
+        } catch (error) {
+            // this.logger?.error(error)
             throw error
         }
     }
@@ -95,57 +123,40 @@ export class CloudflareClient {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId)
             const response = await axios.delete<Responses.DeleteImage>(url, this.config())
-            // logger?.debug({
+            // this.logger?.debug({
             //     message: "Image Deleted",
             //     imageId,
-            //     responseData: response?.data
+            //     responseData: response?.data,
             // })
             return response.data
         } catch (error) {
-            // logger?.error(error)
+            // this.logger?.error(error)
             throw error
         }
     }
 
-    /**
-     * Fetch details for a single image.
-     *
-     * [API Docs](https://api.cloudflare.com/#cloudflare-images-image-details)
-     */
-    public async getImageDetails(imageId: string): Promise<Responses.ImageDetails> {
-        try {
-            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId)
-            const response = await axios.get<Responses.ImageDetails>(url, this.config())
-            // logger?.debug({
-            //     message: "Image Details Fetched",
-            //     imageId,
-            //     responseData: response?.data
-            // })
-            return response.data
-        } catch (error) {
-            // logger?.error(error)
-            throw error
-        }
-    }
+    // =========================================================================
+    // Variants
+    // =========================================================================
 
     /**
-     * Fetch details for a single image.
+     * Create a new image variant.
      *
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-create-a-variant)
      * [Cloudflare Docs](https://developers.cloudflare.com/images/cloudflare-images/transform/resize-images/)
      */
-    public async createImageVariant(_options: Requests.CreateVariant): Promise<Responses.Variant> {
+    public async createVariant(options: Requests.CreateVariant): Promise<Responses.VariantDetails> {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants")
-            const response = await axios.post<Responses.Variant>(url, this.config())
-            // logger?.debug({
-            //     message: "Image Details Fetched",
+            const response = await axios.post<Responses.VariantDetails>(url, options, this.config())
+            // this.logger?.debug({
+            //     message: "Variant Created",
             //     options,
-            //     responseData: response?.data
+            //     responseData: response?.data,
             // })
             return response.data
         } catch (error) {
-            // logger?.error(error)
+            // this.logger?.error(error)
             throw error
         }
     }
@@ -159,16 +170,88 @@ export class CloudflareClient {
         const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants")
         try {
             const response = await axios.get<Responses.ListVariants>(url, this.config())
-            // logger?.debug({
-            //     message: "Images Listed",
-            //     responseData: response?.data
+            // this.logger?.debug({
+            //     message: "Variants Listed",
+            //     responseData: response?.data,
             // })
             return response.data
         } catch (error) {
-            // logger?.error(error)
+            // this.logger?.error(error)
             throw error
         }
     }
+
+    /**
+     * Fetch details for a single variant.
+     *
+     * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-variant-details)
+     */
+    public async getVariant(variantId: string): Promise<Responses.VariantDetails> {
+        try {
+            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants", variantId)
+            const response = await axios.get<Responses.VariantDetails>(url, this.config())
+            // this.logger?.debug({
+            //     message: "Variant Details Fetched",
+            //     imageId,
+            //     responseData: response?.data,
+            // })
+            return response.data
+        } catch (error) {
+            // this.logger?.error(error)
+            throw error
+        }
+    }
+
+    /**
+     * Update an existing variant.
+     *
+     * Updating a variant purges the cache for all images associated with the variant.
+     *
+     * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-update-a-variant)
+     * [Cloudflare Docs](https://developers.cloudflare.com/images/cloudflare-images/transform/resize-images/)
+     */
+    public async updateVariant(variantId: string, options: Requests.UpdateVariant): Promise<Responses.VariantDetails> {
+        try {
+            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants", variantId)
+            const response = await axios.patch<Responses.VariantDetails>(url, options, this.config())
+            // this.logger?.debug({
+            //     message: "Variant Updated",
+            //     options,
+            //     responseData: response?.data,
+            // })
+            return response.data
+        } catch (error) {
+            // this.logger?.error(error)
+            throw error
+        }
+    }
+
+    /**
+     * Delete a variant.
+     *
+     * Deleting a variant purges the cache for all images associated with the variant.
+     *
+     * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-delete-a-variant)
+     */
+    public async deleteVariant(variantId: string): Promise<Responses.DeleteVariant> {
+        try {
+            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants", variantId)
+            const response = await axios.delete<Responses.DeleteVariant>(url, this.config())
+            // this.logger?.debug({
+            //     message: "Variant Deleted",
+            //     imageId,
+            //     responseData: response?.data,
+            // })
+            return response.data
+        } catch (error) {
+            // this.logger?.error(error)
+            throw error
+        }
+    }
+
+    // =========================================================================
+    // Misc.
+    // =========================================================================
 
     /**
      * Fetch usage statistics details for Cloudflare Images.
@@ -179,13 +262,13 @@ export class CloudflareClient {
         const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "stats")
         try {
             const response = await axios.get<Responses.UsageStatistics>(url, this.config())
-            // logger?.debug({
-            //     message: "Usage Statistics fetched",
-            //     responseData: response?.data
+            // this.logger?.debug({
+            //     message: "Usage Statistics Fetched",
+            //     responseData: response?.data,
             // })
             return response.data
         } catch (error) {
-            // logger?.error(error)
+            // this.logger?.error(error)
             throw error
         }
     }

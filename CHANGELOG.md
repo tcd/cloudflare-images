@@ -8,23 +8,23 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 ## [Unreleased]
 
 
-## [0.6.0-rc.3] - 2022-07-31
+## [0.6.0] - 2022-08-01
+### Added
+- Added methods to `CloudflareClient`:
+    - `getVariant`
+    - `updateVariant`
+    - `deleteVariant`
+- Add ESLint
+### Changed
+- Refactor `Cloudflare` types namespace.
+- Remove node dependencies; prioritize browser support
+- Alter params for `CloudflareClient#uploadFile`
+- Improve optional logging support
+- Renamed methods of `CloudflareClient`:
+    - `createImageVariant` -> `createVariant`
+    - `getImageDetails` -> `getImage`
 ### Fixed
 - Incorrect type definition
-
-
-## [0.6.0-rc.2] - 2022-07-31
-### Changed
-- **BREAKING** Refactor `Cloudflare` types namespace.
-
-
-## [0.6.0-rc.1] - 2022-07-31
-### Changed
-- **BREAKING** Remove node dependencies; prioritize browser support
-- Alter params for `CloudflareClient#uploadFile`
-### Added
-- Add ESLint
-### Fixed
 - Fixed links in `CHANGELOG.md`
 
 
@@ -69,7 +69,7 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 
 
 [Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.6.0...HEAD
-[0.6.0-rc.1]: https://github.com/tcd/cloudflare-images/compare/v0.5.0...v0.6.0-rc.1
+[0.6.0]: https://github.com/tcd/cloudflare-images/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/tcd/cloudflare-images/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/tcd/cloudflare-images/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/tcd/cloudflare-images/compare/v0.3.0...v0.4.0
