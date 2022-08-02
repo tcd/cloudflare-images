@@ -225,6 +225,8 @@ declare module "cloudflare-images" {
 
         export interface CloudflareClientOptions extends Credentials {
             logger?: Logging.ILogger
+            logRequests?: boolean
+            logErrors?: boolean
         }
 
         export class CloudflareClient {

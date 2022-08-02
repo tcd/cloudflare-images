@@ -55,13 +55,13 @@ export class CloudflareClient {
             formData.append("metadata", JSON.stringify(metadata))
             formData.append("requireSignedURLs", requireSignedURLs)
             const response = await axios.post<Responses.UploadImage>(url, formData, this.config())
-            // this.logger?.debug({
-            //     message: "Image Uploaded",
-            //     responseData: response?.data,
-            // })
+            this.logRequest({
+                message: "Image Uploaded",
+                responseData: response?.data,
+            })
             return response.data
         } catch (error) {
-            // this.logger?.error(error)
+            this.logError(error)
             throw error
         }
     }
@@ -82,13 +82,13 @@ export class CloudflareClient {
         }
         try {
             const response = await axios.get<Responses.ListImages>(url, config)
-            // this.logger?.debug({
-            //     message: "Images Listed",
-            //     responseData: response?.data,
-            // })
+            this.logRequest({
+                message: "Images Listed",
+                responseData: response?.data,
+            })
             return response.data
         } catch (error) {
-            // this.logger?.error(error)
+            this.logError(error)
             throw error
         }
     }
@@ -102,14 +102,14 @@ export class CloudflareClient {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId)
             const response = await axios.get<Responses.ImageDetails>(url, this.config())
-            // this.logger?.debug({
-            //     message: "Image Details Fetched",
-            //     imageId,
-            //     responseData: response?.data,
-            // })
+            this.logRequest({
+                message: "Image Details Fetched",
+                imageId,
+                responseData: response?.data,
+            })
             return response.data
         } catch (error) {
-            // this.logger?.error(error)
+            this.logError(error)
             throw error
         }
     }
@@ -123,14 +123,14 @@ export class CloudflareClient {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId)
             const response = await axios.delete<Responses.DeleteImage>(url, this.config())
-            // this.logger?.debug({
-            //     message: "Image Deleted",
-            //     imageId,
-            //     responseData: response?.data,
-            // })
+            this.logRequest({
+                message: "Image Deleted",
+                imageId,
+                responseData: response?.data,
+            })
             return response.data
         } catch (error) {
-            // this.logger?.error(error)
+            this.logError(error)
             throw error
         }
     }
@@ -149,14 +149,14 @@ export class CloudflareClient {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants")
             const response = await axios.post<Responses.VariantDetails>(url, options, this.config())
-            // this.logger?.debug({
-            //     message: "Variant Created",
-            //     options,
-            //     responseData: response?.data,
-            // })
+            this.logRequest({
+                message: "Variant Created",
+                options,
+                responseData: response?.data,
+            })
             return response.data
         } catch (error) {
-            // this.logger?.error(error)
+            this.logError(error)
             throw error
         }
     }
@@ -170,13 +170,13 @@ export class CloudflareClient {
         const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants")
         try {
             const response = await axios.get<Responses.ListVariants>(url, this.config())
-            // this.logger?.debug({
-            //     message: "Variants Listed",
-            //     responseData: response?.data,
-            // })
+            this.logRequest({
+                message: "Variants Listed",
+                responseData: response?.data,
+            })
             return response.data
         } catch (error) {
-            // this.logger?.error(error)
+            this.logError(error)
             throw error
         }
     }
@@ -190,14 +190,14 @@ export class CloudflareClient {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants", variantId)
             const response = await axios.get<Responses.VariantDetails>(url, this.config())
-            // this.logger?.debug({
-            //     message: "Variant Details Fetched",
-            //     imageId,
-            //     responseData: response?.data,
-            // })
+            this.logRequest({
+                message: "Variant Details Fetched",
+                variantId,
+                responseData: response?.data,
+            })
             return response.data
         } catch (error) {
-            // this.logger?.error(error)
+            this.logError(error)
             throw error
         }
     }
@@ -214,14 +214,14 @@ export class CloudflareClient {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants", variantId)
             const response = await axios.patch<Responses.VariantDetails>(url, options, this.config())
-            // this.logger?.debug({
-            //     message: "Variant Updated",
-            //     options,
-            //     responseData: response?.data,
-            // })
+            this.logRequest({
+                message: "Variant Updated",
+                options,
+                responseData: response?.data,
+            })
             return response.data
         } catch (error) {
-            // this.logger?.error(error)
+            this.logError(error)
             throw error
         }
     }
@@ -237,14 +237,14 @@ export class CloudflareClient {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants", variantId)
             const response = await axios.delete<Responses.DeleteVariant>(url, this.config())
-            // this.logger?.debug({
-            //     message: "Variant Deleted",
-            //     imageId,
-            //     responseData: response?.data,
-            // })
+            this.logRequest({
+                message: "Variant Deleted",
+                variantId,
+                responseData: response?.data,
+            })
             return response.data
         } catch (error) {
-            // this.logger?.error(error)
+            this.logError(error)
             throw error
         }
     }
@@ -262,13 +262,13 @@ export class CloudflareClient {
         const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "stats")
         try {
             const response = await axios.get<Responses.UsageStatistics>(url, this.config())
-            // this.logger?.debug({
-            //     message: "Usage Statistics Fetched",
-            //     responseData: response?.data,
-            // })
+            this.logRequest({
+                message: "Usage Statistics Fetched",
+                responseData: response?.data,
+            })
             return response.data
         } catch (error) {
-            // this.logger?.error(error)
+            this.logError(error)
             throw error
         }
     }
@@ -276,6 +276,16 @@ export class CloudflareClient {
     // =========================================================================
     // Helpers
     // =========================================================================
+
+    private logRequest(data: any): void {
+        if (this.options.logRequests !== true) { return null }
+        this.logger?.debug(data)
+    }
+
+    private logError(data: any): void {
+        if (this.options.logErrors !== true) { return null }
+        this.logger?.error(data)
+    }
 
     private get apiKey(): string { return this.options.apiKey }
 
