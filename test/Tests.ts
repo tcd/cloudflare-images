@@ -1,5 +1,5 @@
 import { join } from "path"
-import { readFile } from "fs/promises"
+import { createReadStream } from "fs"
 import { CloudflareClient } from "../src"
 import { credentials } from "./credentials"
 
@@ -33,11 +33,11 @@ export class Tests {
             // -----------------------------------------------------------------
             // Images
             // -----------------------------------------------------------------
-            case "image.list":   response = await this.listImages();  break
-            case "image.get":    response = await this.getImage();    break
+            case "image.list":   response = await this.listImages(); break
+            case "image.get":    response = await this.getImage("misc/random-bullshit"); break
             case "image.create": response = await this.createImage(); break
-            case "image.update": response = await this.updateImage(); break
-            case "image.delete": response = await this.deleteImage(); break
+            case "image.update": response = await this.updateImage("misc/random-bullshit"); break
+            case "image.delete": response = await this.deleteImage("testing/w3"); break
             // -----------------------------------------------------------------
             // Variants
             // -----------------------------------------------------------------
@@ -45,7 +45,7 @@ export class Tests {
             // case "variant.get":    response = await this.getVariant();    break
             case "variant.create": response = await this.createVariant(); break
             case "variant.update": response = await this.updateVariant(); break
-            case "variant.delete": response = await this.deleteVariant(); break
+            case "variant.delete": response = await this.deleteVariant("xxx"); break
             // -----------------------------------------------------------------
             // Misc.
             // -----------------------------------------------------------------
@@ -64,12 +64,13 @@ export class Tests {
     // =========================================================================
 
     async createImage(): Promise<any> {
-        const file = await readFile(join(__dirname, "w3c_home.png"))
-        const response = await this.client.createImage({
+        const path = join(__dirname, "w3c_home.png")
+        // const file = createReadStream(join(__dirname, "w3c_home.png"))
+        const options = {
             id: "testing/w3",
             fileName: "w3c_home.png",
-            fileData: file,
-        })
+        }
+        const response = await this.client.createImageFromFile(options, path)
         return response
     }
 
@@ -81,22 +82,22 @@ export class Tests {
         return response
     }
 
-    async getImage(): Promise<any> {
-        const response = await this.client.getImage("misc/random-bullshit")
+    async getImage(imageId: string): Promise<any> {
+        const response = await this.client.getImage(imageId)
         return response
     }
 
-    async updateImage(): Promise<any> {
-        const response = await this.client.updateImage("misc/random-bullshit", {
+    async updateImage(imageId: string): Promise<any> {
+        const response = await this.client.updateImage(imageId, {
             metadata: {
-                someKey: "this image has metadata now",
+                updatedAt: new Date().toISOString(),
             },
         })
         return response
     }
 
-    async deleteImage(): Promise<any> {
-        const response = await this.client.deleteImage("misc/random-bullshit")
+    async deleteImage(imageId: string): Promise<any> {
+        const response = await this.client.deleteImage(imageId)
         return response
     }
 
@@ -118,8 +119,8 @@ export class Tests {
         return response
     }
 
-    async deleteVariant(): Promise<any> {
-        const response = await this.client.deleteVariant("xxx")
+    async deleteVariant(variantId: string): Promise<any> {
+        const response = await this.client.deleteVariant(variantId)
         return response
     }
 

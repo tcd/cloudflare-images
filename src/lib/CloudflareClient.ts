@@ -49,20 +49,6 @@ export class CloudflareClient implements ICloudflareClient {
 
     public async createImageFromFile(request: Requests.CreateImage, path: string): Promise<Responses.CreateImage> {
         try {
-            const stream = createReadStream(path)
-            stream.pause()
-            return await this.createImageFromStream(request, stream)
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "image.create",
-            })
-            throw error
-        }
-    }
-
-    public async createImageFromStream(request: Requests.CreateImage, stream: ReadStream): Promise<Responses.CreateImage> {
-        try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
             const config = this.config({
                 "content-type": "multipart/form-data",
@@ -73,9 +59,7 @@ export class CloudflareClient implements ICloudflareClient {
                 metadata,
                 requireSignedURLs,
             } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
-            if (stream.isPaused()) {
-                stream.resume()
-            }
+            const stream = createReadStream(path)
             const formData = new FormData()
             formData.append("id", id)
             formData.append("file", stream, fileName)

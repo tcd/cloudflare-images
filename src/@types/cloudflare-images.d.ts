@@ -313,14 +313,14 @@ declare module "cloudflare-images" {
              * [API Docs](https://api.cloudflare.com/#cloudflare-images-upload-an-image-using-a-single-http-request)
              */
             createImageFromFile(request: Requests.CreateImage, path: string): Promise<Responses.CreateImage>
-            /**
-             * Upload an image via Node.js Readstream.
-             *
-             * Max image size: `10 MB`
-             *
-             * [API Docs](https://api.cloudflare.com/#cloudflare-images-upload-an-image-using-a-single-http-request)
-             */
-            createImageFromStream(request: Requests.CreateImage, stream: import("fs").ReadStream): Promise<Responses.CreateImage>
+            // /**
+            //  * Upload an image via Node.js Readstream.
+            //  *
+            //  * Max image size: `10 MB`
+            //  *
+            //  * [API Docs](https://api.cloudflare.com/#cloudflare-images-upload-an-image-using-a-single-http-request)
+            //  */
+            // createImageFromStream(request: Requests.CreateImage, stream: import("fs").ReadStream): Promise<Responses.CreateImage>
             /**
              * Upload an image via URL.
              *
@@ -413,7 +413,7 @@ declare module "cloudflare-images" {
         export class CloudflareClient implements ICloudflareClient {
             constructor(options: CloudflareClientOptions)
             createImageFromFile(request: Requests.CreateImage, path: string): Promise<Responses.CreateImage>
-            createImageFromStream(request: Requests.CreateImage, stream: import("fs").ReadStream): Promise<Responses.CreateImage>
+            // createImageFromStream(request: Requests.CreateImage, stream: import("fs").ReadStream): Promise<Responses.CreateImage>
             createImageFromUrl(request: Requests.CreateImage, url: string): Promise<Responses.CreateImage>
             listImages(request: Requests.ListImages): Promise<Responses.ListImages>
             getImage(imageId: string): Promise<Responses.GetImage>
