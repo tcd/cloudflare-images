@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 ## [Unreleased]
 ### Changed
 - Update readme to explain lack of browser support
+- Rename `DEFAULT_REQUESTS` to `DefaultRequests`
 
 
 ## [0.7.0] - 2022-08-03
