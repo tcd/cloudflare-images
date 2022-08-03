@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 ## [Unreleased]
 
 
+## [0.7.0] - 2022-08-03
+### Added
+- Add support for most all operations except for `"image.create"`
+### Fixed
+- Verified accuracy of request & response type definitions.
+
+
 ## [0.6.1] - 2022-08-01
 ### Fixed
 - Forgot to build code before publishing
@@ -73,7 +80,8 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 - Claimed package name on npm
 
 
-[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/tcd/cloudflare-images/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/tcd/cloudflare-images/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/tcd/cloudflare-images/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/tcd/cloudflare-images/compare/v0.4.0...v0.4.1
@@ -82,3 +90,5 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 [0.2.0]: https://github.com/tcd/cloudflare-images/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/tcd/cloudflare-images/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/tcd/cloudflare-images/releases/tag/v0.1.0
+[keep-a-changelog]: https://keepachangelog.com/en/1.0.0
+[semver]: https://semver.org/spec/v2.0.0.html

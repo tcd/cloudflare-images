@@ -11,6 +11,24 @@ declare module "cloudflare-images" {
 
         export type Metadata = Record<string, any>
 
+        export interface CloudflareError {
+            code: number
+            message: string
+        }
+
+        export type Operation =
+            | "image.list"
+            | "image.get"
+            | "image.create"
+            | "image.update"
+            | "image.delete"
+            | "variant.list"
+            | "variant.get"
+            | "variant.create"
+            | "variant.update"
+            | "variant.delete"
+            | "usageStatistics.get"
+
         // =====================================================================
         // Logging
         // =====================================================================
@@ -67,7 +85,7 @@ declare module "cloudflare-images" {
                 metadata?: Metadata
             }
 
-            export interface ImageList {
+            export interface ListImagesResult {
                 images: Image[]
             }
         }
@@ -115,26 +133,42 @@ declare module "cloudflare-images" {
                 | VariantFits.Crop
                 | VariantFits.Pad
 
+            export interface VariantOptions {
+                /** The fit property describes how the width and height dimensions should be interpreted. */
+                fit: VariantFit
+                /** What EXIF data should be preserved in the output image. */
+                metadata?: "keep" | "copyright" | "none"
+                /** Maximum width in image pixels. */
+                width: number
+                /** Maximum height in image pixels. */
+                height: number
+                /** Indicates whether the variant can access an image without a signature, regardless of image access control. */
+                neverRequireSignedURLs?: boolean
+            }
             export interface Variant {
                 /** API item identifier tag. */
                 id: string
                 /** Allows you to define image resizing sizes for different use cases. */
-                options: {
-                    /** The fit property describes how the width and height dimensions should be interpreted. */
-                    fit: VariantFit
-                    /** What EXIF data should be preserved in the output image. */
-                    metadata?: "keep" | "copyright" | "none"
-                    /** Maximum width in image pixels. */
-                    width: number
-                    /** Maximum height in image pixels. */
-                    height: number
-                    /** Indicates whether the variant can access an image without a signature, regardless of image access control. */
-                    neverRequireSignedURLs?: boolean
-                }
+                options: VariantOptions
             }
 
-            export interface VariantList {
-                variants: { [key: string]: Variant }
+            export interface ListVariantsResult {
+                variants: { [id: string]: Variant }
+            }
+
+            export interface GetVariantResult {
+                variant: Variant
+            }
+
+            export interface CreateVariantResult {
+                id: string
+                variant: Variant
+            }
+
+            export interface UpdateVariantResult {
+                /** I guess the request that was sent. */
+                o: VariantOptions
+                variant: Variant
             }
         }
 
@@ -142,28 +176,39 @@ declare module "cloudflare-images" {
         // Responses
         // =====================================================================
         export namespace Responses {
-            export interface Response<T = any> {
+            export interface Response<T = unknown> {
                 result: T
                 result_info: any
                 success: boolean
-                errors: any[]
+                errors: CloudflareError[]
                 messages: any[]
             }
+
+            export type EmptyResponse<T = unknown> = Omit<Response<T>, "result_info">
+
+            export type ListImages      = Response<Images.ListImagesResult> // confirmed
+            export type GetImage        = Response<Images.Image> // confirmed
             export type UploadImage     = Response<Images.Image>
-            export type DeleteImage     = Response<undefined>
-            export type ListImages      = Response<Images.ImageList>
-            export type ImageDetails    = Response<ImageData>
-            export type VariantDetails  = Response<Variants.Variant>
-            export type ListVariants    = Response<Variants.VariantList>
+            export type UpdateImage     = Response<Images.Image> // confirmed
+            export type DeleteImage     = EmptyResponse
+
+            export type ListVariants    = Response<Variants.ListVariantsResult> // confirmed
+            export type GetVariant      = Response<Variants.GetVariantResult> // confirmed
+            export type CreateVariant   = Response<Variants.CreateVariantResult> // confirmed
+            export type UpdateVariant   = Response<Variants.UpdateVariantResult> // confirmed
+            export type DeleteVariant   = EmptyResponse // Confirmed
+
             export type UsageStatistics = Response<UsageStats>
-            export type DeleteVariant   = Response<undefined>
         }
 
         // =====================================================================
         // Requests
         // =====================================================================
         export namespace Requests {
-            export interface ImageUpload {
+            // -----------------------------------------------------------------
+            // Images
+            // -----------------------------------------------------------------
+            export interface UploadImage {
                 id: string
                 fileName: string
                 fileData: Blob
@@ -201,15 +246,23 @@ declare module "cloudflare-images" {
                 /**
                  * User modifiable key-value store.
                  * Can use used for keeping references to another system of record for managing images.
+                 * No change if not specified.
                  */
                 metadata?: Metadata
                 /**
-                 * Indicates whether the image requires a signature token for the access.
+                 * Indicates whether the image can be accessed using only its UID.
+                 * If set to `true`, a signed token needs to be generated with a signing key to view the image.
+                 * Returns a new UID on a change.
+                 * No change if not specified.
                  */
                 requireSignedURLs?: boolean
             }
-            export interface CreateVariant extends Variants.Variant { }
-            export interface UpdateVariant extends Variants.Variant { }
+
+            // -----------------------------------------------------------------
+            // Variants
+            // -----------------------------------------------------------------
+            export type CreateVariant = Variants.Variant
+            export type UpdateVariant = Omit<Variants.Variant, "options">
         }
 
         // =========================================================================
@@ -239,7 +292,7 @@ declare module "cloudflare-images" {
              *
              * [API Docs](https://api.cloudflare.com/#cloudflare-images-upload-an-image-using-a-single-http-request)
              */
-            uploadImage(request: Requests.ImageUpload): Promise<Responses.UploadImage>
+            uploadImage(request: Requests.UploadImage): Promise<Responses.UploadImage>
             /**
              * List up to 100 images with one request.
              *
@@ -251,7 +304,7 @@ declare module "cloudflare-images" {
              *
              * [API Docs](https://api.cloudflare.com/#cloudflare-images-image-details)
              */
-            getImage(imageId: string): Promise<Responses.ImageDetails>
+            getImage(imageId: string): Promise<Responses.GetImage>
             // /**
             //  * Fetch base image.
             //  * For most images this will be the originally uploaded file.
@@ -260,14 +313,14 @@ declare module "cloudflare-images" {
             //  * [API Docs](https://api.cloudflare.com/#cloudflare-images-base-image)
             //  */
             // getImageBase(imageId: string): Promise<Blob>
-            // /**
-            //  * Update image.
-            //  *
-            //  * Update image access control. On access control change, all copies of the image are purged from cache.
-            //  *
-            //  * [API Docs](https://api.cloudflare.com/#cloudflare-images-update-image)
-            //  */
-            // updateImage(imageId: string, options: Requests.UpdateImage): Promise<Responses.ImageDetails>
+            /**
+             * Update image.
+             *
+             * Update image access control. On access control change, all copies of the image are purged from cache.
+             *
+             * [API Docs](https://api.cloudflare.com/#cloudflare-images-update-image)
+             */
+            updateImage(imageId: string, options: Requests.UpdateImage): Promise<Responses.UpdateImage>
             /**
              * Delete an image on Cloudflare Images. On success, all copies of the image are deleted and purged from cache.
              *
@@ -283,7 +336,7 @@ declare module "cloudflare-images" {
              * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-create-a-variant)
              * [Cloudflare Docs](https://developers.cloudflare.com/images/cloudflare-images/transform/resize-images/)
              */
-            createVariant(options: Requests.CreateVariant): Promise<Responses.VariantDetails>
+            createVariant(options: Requests.CreateVariant): Promise<Responses.CreateVariant>
             /**
              * Lists existing variants.
              *
@@ -295,7 +348,7 @@ declare module "cloudflare-images" {
              *
              * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-variant-details)
              */
-            getVariant(variantId: string): Promise<Responses.VariantDetails>
+            getVariant(variantId: string): Promise<Responses.GetVariant>
             /**
              * Update an existing variant.
              *
@@ -304,7 +357,7 @@ declare module "cloudflare-images" {
              * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-update-a-variant)
              * [Cloudflare Docs](https://developers.cloudflare.com/images/cloudflare-images/transform/resize-images/)
              */
-            updateVariant(variantId: string, options: Requests.UpdateVariant): Promise<Responses.VariantDetails>
+            updateVariant(variantId: string, options: Requests.UpdateVariant): Promise<Responses.UpdateVariant>
             /**
              * Delete a variant.
              *

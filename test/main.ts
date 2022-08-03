@@ -1,9 +1,10 @@
 import "dotenv/config"
 
-import { list } from "./list"
+import { Tests } from "./Tests"
 
 const main = async (): Promise<any> => {
-    await list()
+    const tests = new Tests()
+    await tests.test("image.list")
 }
 
 (async () => {

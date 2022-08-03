@@ -39,7 +39,7 @@ export class CloudflareClient {
      *
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-upload-an-image-using-a-single-http-request)
      */
-    public async uploadImage(request: Requests.ImageUpload): Promise<Responses.UploadImage> {
+    public async uploadImage(request: Requests.UploadImage): Promise<Responses.UploadImage> {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
             const {
@@ -48,7 +48,7 @@ export class CloudflareClient {
                 fileData,
                 metadata,
                 requireSignedURLs,
-            } = { ...DEFAULT_REQUESTS.uploadImage, ...request }
+            } = { ...DEFAULT_REQUESTS["image.create"] as Requests.UploadImage, ...request }
             const formData = new FormData()
             formData.append("id", id)
             formData.append("file", fileData, fileName)
@@ -76,7 +76,7 @@ export class CloudflareClient {
         const config: AxiosRequestConfig = {
             ...this.config(),
             params: {
-                ...DEFAULT_REQUESTS.listImages,
+                ...DEFAULT_REQUESTS["image.list"],
                 ...request,
             },
         }
@@ -98,12 +98,35 @@ export class CloudflareClient {
      *
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-image-details)
      */
-    public async getImage(imageId: string): Promise<Responses.ImageDetails> {
+    public async getImage(imageId: string): Promise<Responses.GetImage> {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId)
-            const response = await axios.get<Responses.ImageDetails>(url, this.config())
+            const response = await axios.get<Responses.GetImage>(url, this.config())
             this.logRequest({
                 message: "Image Details Fetched",
+                imageId,
+                responseData: response?.data,
+            })
+            return response.data
+        } catch (error) {
+            this.logError(error)
+            throw error
+        }
+    }
+
+    /**
+     * Update image.
+     *
+     * Update image access control. On access control change, all copies of the image are purged from cache.
+     *
+     * [API Docs](https://api.cloudflare.com/#cloudflare-images-update-image)
+     */
+    public async updateImage(imageId: string, options: Requests.UpdateImage): Promise<Responses.UpdateImage> {
+        try {
+            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId)
+            const response = await axios.patch<Responses.UpdateImage>(url, options, this.config())
+            this.logRequest({
+                message: "Image Updated",
                 imageId,
                 responseData: response?.data,
             })
@@ -145,10 +168,10 @@ export class CloudflareClient {
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-create-a-variant)
      * [Cloudflare Docs](https://developers.cloudflare.com/images/cloudflare-images/transform/resize-images/)
      */
-    public async createVariant(options: Requests.CreateVariant): Promise<Responses.VariantDetails> {
+    public async createVariant(options: Requests.CreateVariant): Promise<Responses.CreateVariant> {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants")
-            const response = await axios.post<Responses.VariantDetails>(url, options, this.config())
+            const response = await axios.post<Responses.CreateVariant>(url, options, this.config())
             this.logRequest({
                 message: "Variant Created",
                 options,
@@ -156,8 +179,13 @@ export class CloudflareClient {
             })
             return response.data
         } catch (error) {
-            this.logError(error)
-            throw error
+            // if (isAxiosError(error)) {
+            //     debugger
+            //     this.logError({ error })
+            // } else {
+            //     throw error
+            // }
+            this.logError(error?.data)
         }
     }
 
@@ -186,10 +214,10 @@ export class CloudflareClient {
      *
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-variant-details)
      */
-    public async getVariant(variantId: string): Promise<Responses.VariantDetails> {
+    public async getVariant(variantId: string): Promise<Responses.GetVariant> {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants", variantId)
-            const response = await axios.get<Responses.VariantDetails>(url, this.config())
+            const response = await axios.get<Responses.GetVariant>(url, this.config())
             this.logRequest({
                 message: "Variant Details Fetched",
                 variantId,
@@ -210,10 +238,10 @@ export class CloudflareClient {
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-update-a-variant)
      * [Cloudflare Docs](https://developers.cloudflare.com/images/cloudflare-images/transform/resize-images/)
      */
-    public async updateVariant(variantId: string, options: Requests.UpdateVariant): Promise<Responses.VariantDetails> {
+    public async updateVariant(variantId: string, options: Requests.UpdateVariant): Promise<Responses.UpdateVariant> {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants", variantId)
-            const response = await axios.patch<Responses.VariantDetails>(url, options, this.config())
+            const response = await axios.patch<Responses.UpdateVariant>(url, options, this.config())
             this.logRequest({
                 message: "Variant Updated",
                 options,
