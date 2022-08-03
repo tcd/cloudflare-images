@@ -6,13 +6,15 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 
 
 ## [Unreleased]
+### Changed
+- Update readme to explain lack of browser support
 
 
 ## [0.7.0] - 2022-08-03
 ### Added
 - Add support for most all operations except for `"image.create"`
 ### Fixed
-- Verified accuracy of request & response type definitions.
+- Verified accuracy of request & response type definitions
 
 
 ## [0.6.1] - 2022-08-01
@@ -28,7 +30,7 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
     - `deleteVariant`
 - Add ESLint
 ### Changed
-- Refactor `Cloudflare` types namespace.
+- Refactor `Cloudflare` types namespace
 - Remove node dependencies; prioritize browser support
 - Alter params for `CloudflareClient#uploadFile`
 - Improve optional logging support
