@@ -1,9 +1,8 @@
 import { Requests, Operation } from "cloudflare-images"
 
-const image_upload: Requests.CreateImage = {
+const image_create: Requests.CreateImage = {
     id: null,
     fileName: null,
-    fileData: null,
     metadata: {
         updatedAt: new Date().toISOString(),
     },
@@ -22,7 +21,7 @@ const image_list: Requests.ListImages = {
 }
 
 export const DefaultRequests: Record<Operation, any> = {
-    "image.create":        image_upload,
+    "image.create":        image_create,
     "image.list":          image_list,
     "image.get":           {},
     "image.update":        image_update,

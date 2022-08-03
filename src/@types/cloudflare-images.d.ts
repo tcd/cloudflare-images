@@ -230,7 +230,6 @@ declare module "cloudflare-images" {
                  */
                 id: string
                 fileName: string
-                fileData: Blob
                 /**
                  * User modifiable key-value store.
                  *
@@ -298,21 +297,38 @@ declare module "cloudflare-images" {
 
         export interface CloudflareClientOptions extends Credentials {
             logger?: Logging.ILogger
-            logRequests?: boolean
+            logResponses?: boolean
             logErrors?: boolean
         }
 
-        export class CloudflareClient {
-            constructor(options: CloudflareClientOptions)
-            // -----------------------------------------------------------------
-            // Images
-            // -----------------------------------------------------------------
+        /**
+         * A wrapper around the Cloudflare Images API.
+         */
+        export interface ICloudflareClient {
             /**
-             * Upload an image with up to 10 Megabytes using a single HTTP POST (multipart/form-data) request.
+             * Upload a local image file.
+             *
+             * Max image size: `10 MB`
              *
              * [API Docs](https://api.cloudflare.com/#cloudflare-images-upload-an-image-using-a-single-http-request)
              */
-            createImage(request: Requests.CreateImage): Promise<Responses.CreateImage>
+            createImageFromFile(request: Requests.CreateImage, path: string): Promise<Responses.CreateImage>
+            /**
+             * Upload an image via Node.js Readstream.
+             *
+             * Max image size: `10 MB`
+             *
+             * [API Docs](https://api.cloudflare.com/#cloudflare-images-upload-an-image-using-a-single-http-request)
+             */
+            createImageFromStream(request: Requests.CreateImage, stream: import("fs").ReadStream): Promise<Responses.CreateImage>
+            /**
+             * Upload an image via URL.
+             *
+             * Max image size: `10 MB`
+             *
+             * [API Docs](https://api.cloudflare.com/#cloudflare-images-upload-an-image-via-url)
+             */
+            createImageFromUrl(request: Requests.CreateImage, url: string): Promise<Responses.CreateImage>
             /**
              * List up to 100 images with one request.
              *
@@ -325,14 +341,14 @@ declare module "cloudflare-images" {
              * [API Docs](https://api.cloudflare.com/#cloudflare-images-image-details)
              */
             getImage(imageId: string): Promise<Responses.GetImage>
-            // /**
-            //  * Fetch base image.
-            //  * For most images this will be the originally uploaded file.
-            //  * For larger images it can be a near-lossless version of the original.
-            //  *
-            //  * [API Docs](https://api.cloudflare.com/#cloudflare-images-base-image)
-            //  */
-            // getImageBase(imageId: string): Promise<Blob>
+            /**
+             * Fetch base image.
+             * For most images this will be the originally uploaded file.
+             * For larger images it can be a near-lossless version of the original.
+             *
+             * [API Docs](https://api.cloudflare.com/#cloudflare-images-base-image)
+             */
+            downloadImage(imageId: string): Promise<Blob>
             /**
              * Update image.
              *
@@ -347,9 +363,6 @@ declare module "cloudflare-images" {
              * [API Docs](https://api.cloudflare.com/#cloudflare-images-delete-image)
              */
             deleteImage(imageId: string): Promise<Responses.DeleteImage>
-            // -----------------------------------------------------------------
-            // Variants
-            // -----------------------------------------------------------------
             /**
              * Create a new image variant that allows you to resize images for different use cases.
              *
@@ -386,14 +399,32 @@ declare module "cloudflare-images" {
              * [API Docs](https://api.cloudflare.com/#cloudflare-images-variants-delete-a-variant)
              */
             deleteVariant(variantId: string): Promise<Responses.DeleteVariant>
-            // -----------------------------------------------------------------
-            // Misc.
-            // -----------------------------------------------------------------
             /**
              * Fetch usage statistics details for Cloudflare Images.
              *
              * [API Docs](https://api.cloudflare.com/#cloudflare-images-images-usage-statistics)
              */
+            getStats(): Promise<Responses.UsageStatistics>
+        }
+
+        /**
+         * A wrapper around the Cloudflare Images API.
+         */
+        export class CloudflareClient implements ICloudflareClient {
+            constructor(options: CloudflareClientOptions)
+            createImageFromFile(request: Requests.CreateImage, path: string): Promise<Responses.CreateImage>
+            createImageFromStream(request: Requests.CreateImage, stream: import("fs").ReadStream): Promise<Responses.CreateImage>
+            createImageFromUrl(request: Requests.CreateImage, url: string): Promise<Responses.CreateImage>
+            listImages(request: Requests.ListImages): Promise<Responses.ListImages>
+            getImage(imageId: string): Promise<Responses.GetImage>
+            downloadImage(imageId: string): Promise<Blob>
+            updateImage(imageId: string, options: Requests.UpdateImage): Promise<Responses.UpdateImage>
+            deleteImage(imageId: string): Promise<Responses.DeleteImage>
+            createVariant(options: Requests.CreateVariant): Promise<Responses.CreateVariant>
+            listVariants(): Promise<Responses.ListVariants>
+            getVariant(variantId: string): Promise<Responses.GetVariant>
+            updateVariant(variantId: string, options: Requests.UpdateVariant): Promise<Responses.UpdateVariant>
+            deleteVariant(variantId: string): Promise<Responses.DeleteVariant>
             getStats(): Promise<Responses.UsageStatistics>
         }
 
