@@ -8,7 +8,7 @@ import {
     Logging,
 } from "cloudflare-images"
 import { urlJoin } from "./url-join"
-import { DEFAULT_REQUESTS } from "./default-requests"
+import { DefaultRequests } from "./DefaultRequests"
 
 /**
  * Client for interacting with the Cloudflare API
@@ -48,7 +48,7 @@ export class CloudflareClient {
                 fileData,
                 metadata,
                 requireSignedURLs,
-            } = { ...DEFAULT_REQUESTS["image.create"] as Requests.UploadImage, ...request }
+            } = { ...DefaultRequests["image.create"] as Requests.UploadImage, ...request }
             const formData = new FormData()
             formData.append("id", id)
             formData.append("file", fileData, fileName)
@@ -76,7 +76,7 @@ export class CloudflareClient {
         const config: AxiosRequestConfig = {
             ...this.config(),
             params: {
-                ...DEFAULT_REQUESTS["image.list"],
+                ...DefaultRequests["image.list"],
                 ...request,
             },
         }

@@ -21,7 +21,7 @@ const image_list: Requests.ListImages = {
     per_page: 100,
 }
 
-export const DEFAULT_REQUESTS: Record<Operation, any> = {
+export const DefaultRequests: Record<Operation, any> = {
     "image.create":        image_upload,
     "image.list":          image_list,
     "image.get":           {},
