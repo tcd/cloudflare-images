@@ -1,6 +1,6 @@
 import { Requests, Operation } from "cloudflare-images"
 
-const image_upload: Requests.UploadImage = {
+const image_upload: Requests.CreateImage = {
     id: null,
     fileName: null,
     fileData: null,

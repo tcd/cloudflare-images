@@ -1,3 +1,5 @@
+import { join } from "path"
+import { readFile } from "fs/promises"
 import { CloudflareClient } from "../src"
 import { credentials } from "./credentials"
 
@@ -33,7 +35,7 @@ export class Tests {
             // -----------------------------------------------------------------
             case "image.list":   response = await this.listImages();  break
             case "image.get":    response = await this.getImage();    break
-            // case "image.create": response = await this.createImage(); break
+            case "image.create": response = await this.createImage(); break
             case "image.update": response = await this.updateImage(); break
             case "image.delete": response = await this.deleteImage(); break
             // -----------------------------------------------------------------
@@ -60,6 +62,16 @@ export class Tests {
     // =========================================================================
     // Images
     // =========================================================================
+
+    async createImage(): Promise<any> {
+        const file = await readFile(join(__dirname, "w3c_home.png"))
+        const response = await this.client.createImage({
+            id: "testing/w3",
+            fileName: "w3c_home.png",
+            fileData: file,
+        })
+        return response
+    }
 
     async listImages(): Promise<any> {
         const response = await this.client.listImages({

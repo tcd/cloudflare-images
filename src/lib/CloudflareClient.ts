@@ -39,7 +39,7 @@ export class CloudflareClient {
      *
      * [API Docs](https://api.cloudflare.com/#cloudflare-images-upload-an-image-using-a-single-http-request)
      */
-    public async uploadImage(request: Requests.UploadImage): Promise<Responses.UploadImage> {
+    public async createImage(request: Requests.CreateImage): Promise<Responses.CreateImage> {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
             const {
@@ -48,13 +48,13 @@ export class CloudflareClient {
                 fileData,
                 metadata,
                 requireSignedURLs,
-            } = { ...DefaultRequests["image.create"] as Requests.UploadImage, ...request }
+            } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
             const formData = new FormData()
             formData.append("id", id)
             formData.append("file", fileData, fileName)
-            formData.append("metadata", JSON.stringify(metadata))
+            formData.append("metadata", metadata)
             formData.append("requireSignedURLs", requireSignedURLs)
-            const response = await axios.post<Responses.UploadImage>(url, formData, this.config())
+            const response = await axios.post<Responses.CreateImage>(url, formData, this.config())
             this.logRequest({
                 message: "Image Uploaded",
                 responseData: response?.data,

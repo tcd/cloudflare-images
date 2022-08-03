@@ -4,7 +4,7 @@ import { Tests } from "./Tests"
 
 const main = async (): Promise<any> => {
     const tests = new Tests()
-    await tests.test("image.list")
+    await tests.test("image.create")
 }
 
 (async () => {

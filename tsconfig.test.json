@@ -12,7 +12,7 @@
     ],
     "compilerOptions": {
         "module": "CommonJS",
-        "target": "ES6",
+        "target": "ESNext",
         "allowSyntheticDefaultImports": true,
         "noImplicitAny": false,
         "strict": false,
@@ -20,6 +20,11 @@
         "isolatedModules": true,
         "experimentalDecorators": true,
         "sourceMap": true,
+        "esModuleInterop": true,
+        "downlevelIteration": true,
+        "types": [
+            "node",
+        ],
         "lib": [
             "dom",
             "esnext",

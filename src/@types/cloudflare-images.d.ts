@@ -52,13 +52,19 @@ declare module "cloudflare-images" {
             export interface Image {
                 /**
                  * Image unique identifier.
+                 *
+                 * Used in URLs to access the image.
+                 *
                  * Max length: `32`
+                 *
                  * Read only.
                  */
                 id: string
                 /**
                  * Image file name.
+                 *
                  * Max length: `32`
+                 *
                  * Read only.
                  */
                 filename: string
@@ -74,12 +80,15 @@ declare module "cloudflare-images" {
                 requireSignedURLs: boolean
                 /**
                  * Object specifying available variants for an image.
+                 *
                  * Read only.
                  */
                 variants: string[]
                 /**
                  * User modifiable key-value store.
+                 *
                  * Can use used for keeping references to another system of record for managing images.
+                 *
                  * Read only.
                  */
                 metadata?: Metadata
@@ -112,8 +121,11 @@ declare module "cloudflare-images" {
                 export type Cover = "cover"
                 /**
                  * Image will be shrunk and cropped to fit within the area specified by width and height.
+                 *
                  * The image will not be enlarged.
+                 *
                  * For images smaller than the given dimensions it is the same as `scale-down`.
+                 *
                  * For images larger than the given dimensions, it is the same as `cover`.
                  */
                 export type Crop = "crop"
@@ -186,17 +198,17 @@ declare module "cloudflare-images" {
 
             export type EmptyResponse<T = unknown> = Omit<Response<T>, "result_info">
 
-            export type ListImages      = Response<Images.ListImagesResult> // confirmed
-            export type GetImage        = Response<Images.Image> // confirmed
-            export type UploadImage     = Response<Images.Image>
-            export type UpdateImage     = Response<Images.Image> // confirmed
+            export type ListImages      = Response<Images.ListImagesResult>
+            export type GetImage        = Response<Images.Image>
+            export type CreateImage     = Response<Images.Image>
+            export type UpdateImage     = Response<Images.Image>
             export type DeleteImage     = EmptyResponse
 
-            export type ListVariants    = Response<Variants.ListVariantsResult> // confirmed
-            export type GetVariant      = Response<Variants.GetVariantResult> // confirmed
-            export type CreateVariant   = Response<Variants.CreateVariantResult> // confirmed
-            export type UpdateVariant   = Response<Variants.UpdateVariantResult> // confirmed
-            export type DeleteVariant   = EmptyResponse // Confirmed
+            export type ListVariants    = Response<Variants.ListVariantsResult>
+            export type GetVariant      = Response<Variants.GetVariantResult>
+            export type CreateVariant   = Response<Variants.CreateVariantResult>
+            export type UpdateVariant   = Response<Variants.UpdateVariantResult>
+            export type DeleteVariant   = EmptyResponse
 
             export type UsageStatistics = Response<UsageStats>
         }
@@ -208,12 +220,20 @@ declare module "cloudflare-images" {
             // -----------------------------------------------------------------
             // Images
             // -----------------------------------------------------------------
-            export interface UploadImage {
+            export interface CreateImage {
+                /**
+                 * Unique identifier.
+                 *
+                 * Used in URLs to access the image.
+                 *
+                 * Max length: `32`
+                 */
                 id: string
                 fileName: string
                 fileData: Blob
                 /**
                  * User modifiable key-value store.
+                 *
                  * Can use used for keeping references to another system of record for managing images.
                  * @default {}
                  */
@@ -292,7 +312,7 @@ declare module "cloudflare-images" {
              *
              * [API Docs](https://api.cloudflare.com/#cloudflare-images-upload-an-image-using-a-single-http-request)
              */
-            uploadImage(request: Requests.UploadImage): Promise<Responses.UploadImage>
+            createImage(request: Requests.CreateImage): Promise<Responses.CreateImage>
             /**
              * List up to 100 images with one request.
              *
