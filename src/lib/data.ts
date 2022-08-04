@@ -11,6 +11,7 @@ export const OperationUrls: Record<Operation, any> = {
     "image.get":           (accountId: string, imageId: string)   => urlJoin(BASE_URL, "accounts", accountId, "images", "v1", imageId),
     "image.update":        (accountId: string, imageId: string)   => urlJoin(BASE_URL, "accounts", accountId, "images", "v1", imageId),
     "image.delete":        (accountId: string, imageId: string)   => urlJoin(BASE_URL, "accounts", accountId, "images", "v1", imageId),
+    "image.download":      (accountId: string, imageId: string)   => urlJoin(BASE_URL, "accounts", accountId, "images", "v1", imageId, "blob"),
     "variant.create":      (accountId: string)                    => urlJoin(BASE_URL, "accounts", accountId, "images", "v1", "variants"),
     "variant.list":        (accountId: string)                    => urlJoin(BASE_URL, "accounts", accountId, "images", "v1", "variants"),
     "variant.get":         (accountId: string, variantId: string) => urlJoin(BASE_URL, "accounts", accountId, "images", "v1", "variants", variantId),
@@ -25,6 +26,7 @@ export const OperationMethods: Record<Operation, Method> = {
     "image.get":           "GET",
     "image.update":        "PATCH",
     "image.delete":        "DELETE",
+    "image.download":      "GET",
     "variant.create":      "POST",
     "variant.list":        "GET",
     "variant.get":         "GET",
@@ -43,6 +45,7 @@ class IOperationRequests implements Record<Operation, any> {
     ["image.get"]:           undefined
     ["image.update"]:        Cloudflare.Requests.UpdateImage
     ["image.delete"]:        undefined
+    ["image.download"]:      undefined
     ["variant.create"]:      Cloudflare.Requests.CreateVariant
     ["variant.list"]:        undefined
     ["variant.get"]:         undefined
@@ -57,8 +60,9 @@ class IOperationResponses implements Record<Operation, any> {
     ["image.get"]:           Cloudflare.Responses.GetImage
     ["image.update"]:        Cloudflare.Responses.UpdateImage
     ["image.delete"]:        Cloudflare.Responses.DeleteImage
-    ["variant.create"]:      Cloudflare.Responses.CreateImage
-    ["variant.list"]:        Cloudflare.Responses.ListImages
+    ["image.download"]:      Blob
+    ["variant.create"]:      Cloudflare.Responses.CreateVariant
+    ["variant.list"]:        Cloudflare.Responses.ListVariants
     ["variant.get"]:         Cloudflare.Responses.GetVariant
     ["variant.update"]:      Cloudflare.Responses.UpdateVariant
     ["variant.delete"]:      Cloudflare.Responses.DeleteVariant
