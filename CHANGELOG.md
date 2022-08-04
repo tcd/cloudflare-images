@@ -5,12 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog][keep-a-changelog], and this project adheres to [Semantic Versioning][semver].
 
 
-## [Unreleased]
+## [1.0.0] - 2022-08-04
 ### Added
-- [WIP] `createImage`
+- Implement all Cloudflare Image API functionality.
 ### Changed
 - Update readme to explain lack of browser support
 - Rename `DEFAULT_REQUESTS` to `DefaultRequests`
+### Notes
+- Other additional adds, changes, and fixes
 
 
 ## [0.7.0] - 2022-08-03
@@ -85,7 +87,8 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 - Claimed package name on npm
 
 
-[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/tcd/cloudflare-images/compare/v0.7.0...v1.0.0
 [0.7.0]: https://github.com/tcd/cloudflare-images/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/tcd/cloudflare-images/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/tcd/cloudflare-images/compare/v0.4.1...v0.5.0
