@@ -37,7 +37,7 @@ export class Tests {
             case "image.get":    response = await this.getImage("misc/random-bullshit"); break
             case "image.create": response = await this.createImage(); break
             case "image.update": response = await this.updateImage("misc/random-bullshit"); break
-            case "image.delete": response = await this.deleteImage("testing/w3"); break
+            case "image.delete": response = await this.deleteImage("testing/w3c"); break
             // -----------------------------------------------------------------
             // Variants
             // -----------------------------------------------------------------
@@ -64,11 +64,13 @@ export class Tests {
     // =========================================================================
 
     async createImage(): Promise<any> {
-        const path = join(__dirname, "w3c_home.png")
-        // const file = createReadStream(join(__dirname, "w3c_home.png"))
+        const path = join(__dirname, "fixtures", "images", "w3c_home.png")
         const options = {
-            id: "testing/w3",
+            id: "testing/w3c",
             fileName: "w3c_home.png",
+            // metadata: {
+            //     updatedAt: new Date().toISOString(),
+            // },
         }
         const response = await this.client.createImageFromFile(options, path)
         return response

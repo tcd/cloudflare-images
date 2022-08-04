@@ -1,6 +1,8 @@
+import { basename } from "path"
+import { readFile } from "fs/promises"
 import { createReadStream, ReadStream } from "fs"
 import axios, { AxiosRequestConfig } from "axios"
-import FormData from "form-data"
+import NpmFormData from "form-data"
 
 import {
     Requests,
@@ -10,6 +12,7 @@ import {
     ICloudflareClient,
     Operation,
 } from "cloudflare-images"
+import { isBlank } from "./is-blank"
 import { urlJoin } from "./url-join"
 import { DefaultRequests } from "./DefaultRequests"
 
@@ -50,22 +53,32 @@ export class CloudflareClient implements ICloudflareClient {
     public async createImageFromFile(request: Requests.CreateImage, path: string): Promise<Responses.CreateImage> {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
-            const config = this.config({
-                "content-type": "multipart/form-data",
-            })
+            // const url = "http://localhost:3000/api/cloudflare/images/create"
             const {
                 id,
-                fileName,
+                // fileName,
                 metadata,
                 requireSignedURLs,
-            } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
-            const stream = createReadStream(path)
-            const formData = new FormData()
+            // } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
+            } = request
+            // const stream = createReadStream(path)
+            const fileName = basename(path)
+            const file = await readFile(path)
+            const formData = new NpmFormData()
             formData.append("id", id)
-            formData.append("file", stream, fileName)
-            formData.append("metadata", metadata)
-            formData.append("requireSignedURLs", requireSignedURLs)
-            const response = await axios.post<Responses.CreateImage>(url, request, config)
+            formData.append("file", file, fileName)
+            // formData.append("fileName", fileName)
+            // formData.append("apiKey", this.apiKey)
+            // formData.append("accountId", this.accountId)
+            // if (!isBlank(metadata)) {
+            //     formData.append("metadata", JSON.stringify(metadata))
+            // }
+            // formData.append("requireSignedURLs", requireSignedURLs == true ? "true" : false)
+            const config = this.config({
+                "Content-Type": "multipart/form-data",
+                // ...formData.getHeaders(),
+            })
+            const response = await axios.post<Responses.CreateImage>(url, formData, config)
             this.logResponse({
                 operation: "image.create",
                 response: response?.data,
@@ -92,7 +105,7 @@ export class CloudflareClient implements ICloudflareClient {
                 metadata,
                 requireSignedURLs,
             } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
-            const formData = new FormData()
+            const formData = new NpmFormData()
             formData.append("id", id)
             formData.append("fileName", fileName)
             formData.append("url", imageUrl)
