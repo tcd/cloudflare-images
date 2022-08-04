@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog][keep-a-changelog], and this project adheres to [Semantic Versioning][semver].
 
 
+## [1.1.0] - 2022-08-04
+### Added
+- Add method `CloudflareClient.createImageFromBuffer`
+
+
 ## [1.0.0] - 2022-08-04
 ### Added
 - Implement all Cloudflare Image API functionality.

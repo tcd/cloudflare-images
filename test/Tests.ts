@@ -2,6 +2,7 @@ import { join } from "path"
 import { createReadStream } from "fs"
 import { CloudflareClient } from "../src"
 import { credentials } from "./credentials"
+import { readFile } from "fs/promises"
 
 export type CloudflareOperation =
     | "image.list"
@@ -60,10 +61,28 @@ export class Tests {
     }
 
     // =========================================================================
-    // Images
+    // Upload Image
     // =========================================================================
 
     async createImage(): Promise<any> {
+        return this.fromFile()
+    }
+
+    async fromBuffer(): Promise<any> {
+        const path = join(__dirname, "fixtures", "images", "w3c_home.png")
+        const file = await readFile(path)
+        const options = {
+            id: "testing/w3c",
+            fileName: "other-name.png",
+            metadata: {
+                updatedAt: new Date().toISOString(),
+            },
+        }
+        const response = await this.client.createImageFromBuffer(options, file)
+        return response
+    }
+
+    async fromFile(): Promise<any> {
         const path = join(__dirname, "fixtures", "images", "w3c_home.png")
         const options = {
             id: "testing/w3c",
@@ -75,6 +94,11 @@ export class Tests {
         const response = await this.client.createImageFromFile(options, path)
         return response
     }
+
+    // =========================================================================
+    // Images
+    // =========================================================================
+
 
     async listImages(): Promise<any> {
         const response = await this.client.listImages({

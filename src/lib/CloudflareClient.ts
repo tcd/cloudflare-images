@@ -49,6 +49,40 @@ export class CloudflareClient implements ICloudflareClient {
     // Images
     // =========================================================================
 
+    public async createImageFromBuffer(request: Requests.CreateImage, buffer: Buffer): Promise<Responses.CreateImage> {
+        try {
+            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
+            const {
+                id,
+                fileName,
+                metadata,
+                requireSignedURLs,
+            } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
+            const formData = new NpmFormData()
+            formData.append("id", id)
+            formData.append("file", buffer, fileName)
+            if (!isBlank(metadata)) {
+                formData.append("metadata", JSON.stringify(metadata), { contentType: "application/json" })
+            }
+            formData.append("requireSignedURLs", requireSignedURLs == true ? "true" : "false")
+            const config = this.config({
+                "Content-Type": "multipart/form-data",
+            })
+            const response = await axios.post<Responses.CreateImage>(url, formData, config)
+            this.logResponse({
+                operation: "image.create",
+                response: response?.data,
+            })
+            return response.data
+        } catch (error) {
+            this.logError({
+                error,
+                operation: "image.create",
+            })
+            throw error
+        }
+    }
+
     public async createImageFromFile(request: Requests.CreateImage, path: string): Promise<Responses.CreateImage> {
         try {
             const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")

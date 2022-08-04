@@ -307,6 +307,14 @@ declare module "cloudflare-images" {
          */
         export interface ICloudflareClient {
             /**
+             * Upload an image via Node.js Buffer.
+             *
+             * Max image size: `10 MB`
+             *
+             * [API Docs](https://api.cloudflare.com/#cloudflare-images-upload-an-image-using-a-single-http-request)
+             */
+            createImageFromBuffer(request: Requests.CreateImage, buffer: Buffer): Promise<Responses.CreateImage>
+            /**
              * Upload a local image file.
              *
              * Max image size: `10 MB`
@@ -405,6 +413,7 @@ declare module "cloudflare-images" {
          */
         export class CloudflareClient implements ICloudflareClient {
             constructor(options: CloudflareClientOptions)
+            createImageFromBuffer(request: Requests.CreateImage, buffer: Buffer): Promise<Responses.CreateImage>
             createImageFromFile(request: Requests.CreateImage, path: string): Promise<Responses.CreateImage>
             createImageFromUrl(request: Requests.CreateImage, url: string): Promise<Responses.CreateImage>
             listImages(request: Requests.ListImages): Promise<Responses.ListImages>
