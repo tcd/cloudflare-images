@@ -10,7 +10,7 @@
  *
  * @param data any value
  */
- export const isBlank = (data: any): boolean => {
+export const isBlank = (data: any): boolean => {
 
     // Null or undefined
     if (data == undefined) { return true }
