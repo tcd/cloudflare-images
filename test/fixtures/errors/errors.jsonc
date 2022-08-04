@@ -1,0 +1,18 @@
+[
+    // Invalid variant create attempt
+    "ERROR 5400: Bad request: 'xxx' is not a supported fit mode. Use 'cover', 'contain' or 'scale-down'",
+    // conflict
+    "ERROR 5409: Resource already exists",
+    // No error code on this one
+    "variant not found",
+    // Invalid variant create attempt
+    "ERROR 5400: Bad request: missing field `options` at line 1 column 86",
+    // tried to delete an image that didn't exist
+    "ERROR 5404: Image not found",
+    // invalid upload attempt
+    "ERROR 5400: Bad request: Error parsing form fields",
+    // invalid blob upload attempt
+    "ERROR 5400: Bad request: incomplete multipart stream",
+    // invalid blob upload attempt
+    "ERROR 5415: Images must be uploaded as a form, not as raw image data. Please use multipart/form-data format",
+]
