@@ -98,7 +98,7 @@ export class CloudflareClient implements ICloudflareClient {
             formData.append("url", imageUrl)
             formData.append("metadata", metadata)
             formData.append("requireSignedURLs", requireSignedURLs)
-            const response = await axios.post<Responses.CreateImage>(url, request, config)
+            const response = await axios.post<Responses.CreateImage>(url, formData, config)
             this.logResponse({
                 operation: "image.create",
                 response: response?.data,
