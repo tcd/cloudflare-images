@@ -26,6 +26,7 @@ export const DefaultRequests: Record<Operation, any> = {
     "image.get":           {},
     "image.update":        image_update,
     "image.delete":        {},
+    "image.download":      {},
     "variant.list":        {},
     "variant.get":         {},
     "variant.create":      {},
