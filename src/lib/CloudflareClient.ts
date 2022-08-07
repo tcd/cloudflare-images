@@ -14,7 +14,7 @@ import {
 import { isBlank } from "./is-blank"
 import { DefaultRequests } from "./DefaultRequests"
 import { OperationMethods, OperationRequests, OperationUrls } from "./data"
-import { CloudflareException, isAxiosError } from "./errors"
+import { CloudflareException, isAxiosError, matchCloudflareError } from "./errors"
 
 interface LogErrorArgs {
     operation: Operation
@@ -107,15 +107,16 @@ export class CloudflareClient implements ICloudflareClient {
             return response.data
         } catch (error) {
             if (isAxiosError(error)) {
-                const cloudflareError = new CloudflareException(error)
-                if (cloudflareError.isCloudflareError) {
+                // @ts-ignore: next-line
+                const data = matchCloudflareError(error?.response?.data?.trim())
+                if (data != null) {
+                    const cloudflareError = new CloudflareException(data, requestArgs.operation)
                     this.logError({ error: cloudflareError, operation: requestArgs.operation })
                     throw cloudflareError
-                } else {
-                    this.logError({ error, operation: requestArgs.operation })
-                    throw error
                 }
             }
+            this.logError({ error, operation: requestArgs.operation })
+            throw error
         }
     }
 
