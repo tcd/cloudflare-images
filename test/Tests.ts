@@ -1,8 +1,8 @@
 import { join } from "path"
-import { createReadStream } from "fs"
+import { readFile } from "fs/promises"
 import { CloudflareClient } from "../src"
 import { credentials } from "./credentials"
-import { readFile } from "fs/promises"
+import { BASE_64_IMAGES } from "./base-64-images"
 
 export type CloudflareOperation =
     | "image.list"
@@ -10,6 +10,7 @@ export type CloudflareOperation =
     | "image.create"
     | "image.update"
     | "image.delete"
+    // | "image.download"
     | "variant.list"
     | "variant.get"
     | "variant.create"
@@ -29,21 +30,25 @@ export class Tests {
     }
 
     public async test(operation: CloudflareOperation): Promise<unknown> {
+        const args = {
+            variantId: "public",
+            imageId: "testing/w3c",
+        }
         let response: any = {}
         switch (operation) {
             // -----------------------------------------------------------------
             // Images
             // -----------------------------------------------------------------
             case "image.list":   response = await this.listImages(); break
-            case "image.get":    response = await this.getImage("testing/w3c"); break
+            case "image.get":    response = await this.getImage(args.imageId); break
             case "image.create": response = await this.createImage(); break
-            case "image.update": response = await this.updateImage("misc/random-bullshit"); break
-            case "image.delete": response = await this.deleteImage("testing/w3c"); break
+            case "image.update": response = await this.updateImage(args.imageId); break
+            case "image.delete": response = await this.deleteImage(args.imageId); break
             // -----------------------------------------------------------------
             // Variants
             // -----------------------------------------------------------------
-            // case "variant.list":   response = await this.listVariants();  break
-            // case "variant.get":    response = await this.getVariant();    break
+            case "variant.list":   response = await this.listVariants(); break
+            case "variant.get":    response = await this.getVariant(args.variantId); break
             case "variant.create": response = await this.createVariant(); break
             case "variant.update": response = await this.updateVariant(); break
             case "variant.delete": response = await this.deleteVariant("xxx"); break
@@ -130,6 +135,16 @@ export class Tests {
     // =========================================================================
     // Variants
     // =========================================================================
+
+    async listVariants(): Promise<any> {
+        const response = await this.client.listVariants()
+        return response
+    }
+
+    async getVariant(variantId: string): Promise<any> {
+        const response = await this.client.getVariant(variantId)
+        return response
+    }
 
     async createVariant(): Promise<any> {
         const response = await this.client.createVariant({
