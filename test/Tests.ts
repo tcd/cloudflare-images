@@ -1,7 +1,6 @@
 import { join } from "path"
 import { readFile } from "fs/promises"
-// import { CloudflareClient } from "../src"
-import { CloudflareClient } from "../src/lib/CloudflareClient.v2"
+import { CloudflareClient } from "../src"
 import { credentials } from "./credentials"
 import { BASE_64_IMAGES } from "./base-64-images"
 
