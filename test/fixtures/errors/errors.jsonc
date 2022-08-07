@@ -1,7 +1,7 @@
 [
     // Invalid variant create attempt
     "ERROR 5400: Bad request: 'xxx' is not a supported fit mode. Use 'cover', 'contain' or 'scale-down'",
-    // conflict
+    // conflict (uploading an image with an id that already exists)
     "ERROR 5409: Resource already exists",
     // No error code on this one
     "variant not found",
@@ -19,4 +19,6 @@
     "ERROR 5404: Image not found",
     // uploading image from data uri
     "ERROR 9422: Decode error: image failed to be decoded: Uploaded image must have image/jpeg or image/png content type",
+    // Updating an image, not sure what this one was
+    "ERROR 5400: Bad request: EOF while parsing a value at line 1 column 0"
 ]

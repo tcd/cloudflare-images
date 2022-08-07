@@ -1,6 +1,7 @@
 import { join } from "path"
 import { readFile } from "fs/promises"
-import { CloudflareClient } from "../src"
+// import { CloudflareClient } from "../src"
+import { CloudflareClient } from "../src/lib/CloudflareClient.v2"
 import { credentials } from "./credentials"
 import { BASE_64_IMAGES } from "./base-64-images"
 
@@ -31,7 +32,7 @@ export class Tests {
 
     public async test(operation: CloudflareOperation): Promise<unknown> {
         const args = {
-            variantId: "public",
+            variantId: "testing",
             imageId: "testing/w3c",
         }
         let response: any = {}
@@ -51,7 +52,7 @@ export class Tests {
             case "variant.get":    response = await this.getVariant(args.variantId); break
             case "variant.create": response = await this.createVariant(); break
             case "variant.update": response = await this.updateVariant(); break
-            case "variant.delete": response = await this.deleteVariant("xxx"); break
+            case "variant.delete": response = await this.deleteVariant(args.variantId); break
             // -----------------------------------------------------------------
             // Misc.
             // -----------------------------------------------------------------
@@ -103,7 +104,6 @@ export class Tests {
     // =========================================================================
     // Images
     // =========================================================================
-
 
     async listImages(): Promise<any> {
         const response = await this.client.listImages({
@@ -166,7 +166,7 @@ export class Tests {
     }
 
     async updateVariant(): Promise<any> {
-        const response = await this.client.updateVariant("xxx", {
+        const response = await this.client.updateVariant("testing", {
             options: {
                 fit: "pad",
                 metadata: "copyright",

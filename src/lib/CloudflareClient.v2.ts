@@ -99,15 +99,15 @@ export class CloudflareClient implements ICloudflareClient {
                 body,
             } = { ...defaultRequestArgs, ...requestArgs }
             const config: AxiosRequestConfig = {
-                url: OperationUrls[operation](...urlArgs),
+                url: OperationUrls[operation](this.accountId, ...urlArgs),
                 method: OperationMethods[operation],
                 headers: {
                     "Authorization": `Bearer ${this.apiKey}`,
                     ...headers,
                 },
             }
-            if (isBlank(params)) { config.params = params }
-            if (isBlank(body))   { config.data = body }
+            if (!isBlank(params)) { config.params = params }
+            if (!isBlank(body))   { config.data = body }
             const response = await axios.request<TResponse>(config)
             this.logResponse({ operation, response: response?.data })
             return response.data
