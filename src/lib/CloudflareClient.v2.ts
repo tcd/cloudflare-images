@@ -78,15 +78,6 @@ export class CloudflareClient implements ICloudflareClient {
 
     private get accountId(): string { return this.options.accountId }
 
-    private config(otherHeaders: any = {}): AxiosRequestConfig {
-        return {
-            headers: {
-                "Authorization": `Bearer ${this.apiKey}`,
-                ...otherHeaders,
-            },
-        }
-    }
-
     private async request<TResponse>(requestArgs: RequestArgs): Promise<TResponse> {
         try {
             requestArgs = { ...defaultRequestArgs, ...requestArgs }
