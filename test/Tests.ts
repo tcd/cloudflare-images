@@ -71,7 +71,7 @@ export class Tests {
     // =========================================================================
 
     async createImage(): Promise<any> {
-        return this.fromFile()
+        return this.fromBuffer()
     }
 
     async fromBuffer(): Promise<any> {

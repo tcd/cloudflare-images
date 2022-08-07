@@ -5,8 +5,8 @@ import { Tests } from "./Tests"
 const main = async (): Promise<any> => {
     const tests = new Tests()
     // await tests.test("image.get")
-    await tests.test("image.create")
-    // await tests.test("image.delete")
+    // await tests.test("image.create")
+    await tests.test("image.delete")
 }
 
 (async () => {

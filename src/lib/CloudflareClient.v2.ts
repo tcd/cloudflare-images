@@ -12,7 +12,6 @@ import {
     Operation,
 } from "cloudflare-images"
 import { isBlank } from "./is-blank"
-import { urlJoin } from "./url-join"
 import { DefaultRequests } from "./DefaultRequests"
 import { OperationMethods, OperationRequests, OperationUrls } from "./data"
 
@@ -31,7 +30,7 @@ interface RequestArgs {
     urlArgs?: any[]
     params?: Record<string, any>
     headers?: Record<string, string>
-    body?: OperationRequests[Operation]
+    body?: OperationRequests[Operation] | NpmFormData
 }
 const defaultRequestArgs: RequestArgs = {
     operation: null,
@@ -112,7 +111,7 @@ export class CloudflareClient implements ICloudflareClient {
             this.logResponse({ operation, response: response?.data })
             return response.data
         } catch (error) {
-            this.logError({ error, operation: "image.list" })
+            this.logError({ error, operation: requestArgs.operation })
             throw error
         }
     }
@@ -122,106 +121,67 @@ export class CloudflareClient implements ICloudflareClient {
     // =========================================================================
 
     public async createImageFromBuffer(request: Requests.CreateImage, buffer: Buffer): Promise<Responses.CreateImage> {
-        try {
-            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
-            const {
-                id,
-                fileName,
-                metadata,
-                requireSignedURLs,
-            } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
-            const formData = new NpmFormData()
-            formData.append("id", id)
-            formData.append("file", buffer, fileName)
-            if (!isBlank(metadata)) {
-                formData.append("metadata", JSON.stringify(metadata), { contentType: "application/json" })
-            }
-            formData.append("requireSignedURLs", requireSignedURLs == true ? "true" : "false")
-            const config = this.config({
-                "Content-Type": "multipart/form-data",
-            })
-            const response = await axios.post<Responses.CreateImage>(url, formData, config)
-            this.logResponse({
-                operation: "image.create",
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "image.create",
-            })
-            throw error
+        const {
+            id,
+            fileName,
+            metadata,
+            requireSignedURLs,
+        } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
+        const formData = new NpmFormData()
+        formData.append("id", id)
+        formData.append("file", buffer, fileName)
+        formData.append("requireSignedURLs", requireSignedURLs == true ? "true" : "false")
+        if (!isBlank(metadata)) {
+            formData.append("metadata", JSON.stringify(metadata), { contentType: "application/json" })
         }
+        return await this.request({
+            operation: "image.create",
+            headers: { "Content-Type": "multipart/form-data" },
+            body: formData,
+        })
     }
 
     public async createImageFromFile(request: Requests.CreateImage, path: string): Promise<Responses.CreateImage> {
-        try {
-            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
-            let {
-                id,
-                fileName,
-                metadata,
-                requireSignedURLs,
-            } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
-            fileName = isBlank(fileName) ? basename(path) : fileName
-            const file = await readFile(path)
-            const formData = new NpmFormData()
-            formData.append("id", id)
-            formData.append("file", file, fileName)
-            if (!isBlank(metadata)) {
-                formData.append("metadata", JSON.stringify(metadata), { contentType: "application/json" })
-            }
-            formData.append("requireSignedURLs", requireSignedURLs == true ? "true" : "false")
-            const config = this.config({
-                "Content-Type": "multipart/form-data",
-            })
-            const response = await axios.post<Responses.CreateImage>(url, formData, config)
-            this.logResponse({
-                operation: "image.create",
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "image.create",
-            })
-            throw error
+        let {
+            id,
+            fileName,
+            metadata,
+            requireSignedURLs,
+        } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
+        fileName = isBlank(fileName) ? basename(path) : fileName
+        const file = await readFile(path)
+        const formData = new NpmFormData()
+        formData.append("id", id)
+        formData.append("file", file, fileName)
+        formData.append("requireSignedURLs", requireSignedURLs == true ? "true" : "false")
+        if (!isBlank(metadata)) {
+            formData.append("metadata", JSON.stringify(metadata), { contentType: "application/json" })
         }
+        return await this.request({
+            operation: "image.create",
+            headers: { "Content-Type": "multipart/form-data" },
+            body: formData,
+        })
     }
 
     public async createImageFromUrl(request: Requests.CreateImage, imageUrl: string): Promise<Responses.CreateImage> {
-        try {
-            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
-            const config = this.config({
-                "content-type": "multipart/form-data",
-            })
-            const {
-                id,
-                fileName,
-                metadata,
-                requireSignedURLs,
-            } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
-            const formData = new NpmFormData()
-            formData.append("id", id)
-            formData.append("fileName", fileName)
-            formData.append("url", imageUrl)
-            formData.append("metadata", metadata)
-            formData.append("requireSignedURLs", requireSignedURLs)
-            const response = await axios.post<Responses.CreateImage>(url, formData, config)
-            this.logResponse({
-                operation: "image.create",
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "image.create",
-            })
-            throw error
-        }
+        const {
+            id,
+            fileName,
+            metadata,
+            requireSignedURLs,
+        } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
+        const formData = new NpmFormData()
+        formData.append("id", id)
+        formData.append("fileName", fileName)
+        formData.append("url", imageUrl)
+        formData.append("metadata", metadata)
+        formData.append("requireSignedURLs", requireSignedURLs)
+        return await this.request({
+            operation: "image.create",
+            headers: { "Content-Type": "multipart/form-data" },
+            body: formData,
+        })
     }
 
     public async listImages(request: Requests.ListImages = {}): Promise<Responses.ListImages> {
@@ -247,24 +207,6 @@ export class CloudflareClient implements ICloudflareClient {
             urlArgs: [imageId],
         })
     }
-
-    // public async downloadImage(imageId: string): Promise<Blob> {
-    //     try {
-    //         const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId, "blob")
-    //         const response = await axios.get<Blob>(url, this.config())
-    //         this.logResponse({
-    //             operation: "image.download",
-    //             response: response?.data,
-    //         })
-    //         return response.data
-    //     } catch (error) {
-    //         this.logError({
-    //             error,
-    //             operation: "image.download",
-    //         })
-    //         throw error
-    //     }
-    // }
 
     public async updateImage(imageId: string, options: Requests.UpdateImage): Promise<Responses.UpdateImage> {
         return await this.request({
