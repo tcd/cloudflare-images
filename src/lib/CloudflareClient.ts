@@ -12,8 +12,8 @@ import {
     Operation,
 } from "cloudflare-images"
 import { isBlank } from "./is-blank"
-import { urlJoin } from "./url-join"
 import { DefaultRequests } from "./DefaultRequests"
+import { OperationMethods, OperationRequests, OperationUrls } from "./data"
 
 interface LogErrorArgs {
     operation: Operation
@@ -23,6 +23,21 @@ interface LogErrorArgs {
 interface LogResponseArgs {
     operation: Operation
     response: any
+}
+
+interface RequestArgs {
+    operation: Operation
+    urlArgs?: any[]
+    params?: Record<string, any>
+    headers?: Record<string, string>
+    body?: OperationRequests[Operation] | NpmFormData
+}
+const defaultRequestArgs: RequestArgs = {
+    operation: null,
+    urlArgs: [],
+    params: {},
+    headers: {},
+    body: undefined,
 }
 
 /**
@@ -46,333 +61,6 @@ export class CloudflareClient implements ICloudflareClient {
     }
 
     // =========================================================================
-    // Images
-    // =========================================================================
-
-    public async createImageFromBuffer(request: Requests.CreateImage, buffer: Buffer): Promise<Responses.CreateImage> {
-        try {
-            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
-            const {
-                id,
-                fileName,
-                metadata,
-                requireSignedURLs,
-            } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
-            const formData = new NpmFormData()
-            formData.append("id", id)
-            formData.append("file", buffer, fileName)
-            if (!isBlank(metadata)) {
-                formData.append("metadata", JSON.stringify(metadata), { contentType: "application/json" })
-            }
-            formData.append("requireSignedURLs", requireSignedURLs == true ? "true" : "false")
-            const config = this.config({
-                "Content-Type": "multipart/form-data",
-            })
-            const response = await axios.post<Responses.CreateImage>(url, formData, config)
-            this.logResponse({
-                operation: "image.create",
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "image.create",
-            })
-            throw error
-        }
-    }
-
-    public async createImageFromFile(request: Requests.CreateImage, path: string): Promise<Responses.CreateImage> {
-        try {
-            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
-            let {
-                id,
-                fileName,
-                metadata,
-                requireSignedURLs,
-            } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
-            fileName = isBlank(fileName) ? basename(path) : fileName
-            const file = await readFile(path)
-            const formData = new NpmFormData()
-            formData.append("id", id)
-            formData.append("file", file, fileName)
-            if (!isBlank(metadata)) {
-                formData.append("metadata", JSON.stringify(metadata), { contentType: "application/json" })
-            }
-            formData.append("requireSignedURLs", requireSignedURLs == true ? "true" : "false")
-            const config = this.config({
-                "Content-Type": "multipart/form-data",
-            })
-            const response = await axios.post<Responses.CreateImage>(url, formData, config)
-            this.logResponse({
-                operation: "image.create",
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "image.create",
-            })
-            throw error
-        }
-    }
-
-    public async createImageFromUrl(request: Requests.CreateImage, imageUrl: string): Promise<Responses.CreateImage> {
-        try {
-            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
-            const config = this.config({
-                "content-type": "multipart/form-data",
-            })
-            const {
-                id,
-                fileName,
-                metadata,
-                requireSignedURLs,
-            } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
-            const formData = new NpmFormData()
-            formData.append("id", id)
-            formData.append("fileName", fileName)
-            formData.append("url", imageUrl)
-            formData.append("metadata", metadata)
-            formData.append("requireSignedURLs", requireSignedURLs)
-            const response = await axios.post<Responses.CreateImage>(url, formData, config)
-            this.logResponse({
-                operation: "image.create",
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "image.create",
-            })
-            throw error
-        }
-    }
-
-    public async listImages(request: Requests.ListImages = {}): Promise<Responses.ListImages> {
-        const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
-        const config: AxiosRequestConfig = {
-            ...this.config(),
-            params: {
-                ...DefaultRequests["image.list"],
-                ...request,
-            },
-        }
-        try {
-            const response = await axios.get<Responses.ListImages>(url, config)
-            this.logResponse({
-                operation: "image.list",
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "image.list",
-            })
-            throw error
-        }
-    }
-
-    public async getImage(imageId: string): Promise<Responses.GetImage> {
-        try {
-            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId)
-            const response = await axios.get<Responses.GetImage>(url, this.config())
-            this.logResponse({
-                operation: "image.get",
-                // imageId,
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "image.get",
-            })
-            throw error
-        }
-    }
-
-    public async downloadImage(imageId: string): Promise<Blob> {
-        try {
-            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId, "blob")
-            const response = await axios.get<Blob>(url, this.config())
-            this.logResponse({
-                operation: "image.download",
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "image.download",
-            })
-            throw error
-        }
-    }
-
-    public async updateImage(imageId: string, options: Requests.UpdateImage): Promise<Responses.UpdateImage> {
-        try {
-            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId)
-            const response = await axios.patch<Responses.UpdateImage>(url, options, this.config())
-            this.logResponse({
-                operation: "image.update",
-                // imageId,
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "image.update",
-            })
-            throw error
-        }
-    }
-
-    public async deleteImage(imageId: string): Promise<Responses.DeleteImage> {
-        try {
-            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", imageId)
-            const response = await axios.delete<Responses.DeleteImage>(url, this.config())
-            this.logResponse({
-                operation: "image.delete",
-                // imageId,
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "image.delete",
-            })
-            throw error
-        }
-    }
-
-    // =========================================================================
-    // Variants
-    // =========================================================================
-
-    public async createVariant(options: Requests.CreateVariant): Promise<Responses.CreateVariant> {
-        try {
-            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants")
-            const response = await axios.post<Responses.CreateVariant>(url, options, this.config())
-            this.logResponse({
-                operation: "variant.create",
-                // options,
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "variant.create",
-            })
-            throw error
-        }
-    }
-
-    public async listVariants(): Promise<Responses.ListVariants> {
-        const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants")
-        try {
-            const response = await axios.get<Responses.ListVariants>(url, this.config())
-            this.logResponse({
-                operation: "variant.list",
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "variant.list",
-            })
-            throw error
-        }
-    }
-
-    public async getVariant(variantId: string): Promise<Responses.GetVariant> {
-        try {
-            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants", variantId)
-            const response = await axios.get<Responses.GetVariant>(url, this.config())
-            this.logResponse({
-                operation: "variant.get",
-                // variantId,
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "variant.get",
-            })
-            throw error
-        }
-    }
-
-    public async updateVariant(variantId: string, options: Requests.UpdateVariant): Promise<Responses.UpdateVariant> {
-        try {
-            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants", variantId)
-            const response = await axios.patch<Responses.UpdateVariant>(url, options, this.config())
-            this.logResponse({
-                operation: "variant.update",
-                // options,
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "variant.update",
-            })
-            throw error
-        }
-    }
-
-    public async deleteVariant(variantId: string): Promise<Responses.DeleteVariant> {
-        try {
-            const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "variants", variantId)
-            const response = await axios.delete<Responses.DeleteVariant>(url, this.config())
-            this.logResponse({
-                operation: "variant.delete",
-                // variantId,
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "variant.delete",
-            })
-            throw error
-        }
-    }
-
-    // =========================================================================
-    // Misc.
-    // =========================================================================
-
-    public async getStats(): Promise<Responses.UsageStatistics> {
-        const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1", "stats")
-        try {
-            const response = await axios.get<Responses.UsageStatistics>(url, this.config())
-            this.logResponse({
-                operation: "usageStatistics.get",
-                response: response?.data,
-            })
-            return response.data
-        } catch (error) {
-            this.logError({
-                error,
-                operation: "usageStatistics.get",
-            })
-            throw error
-        }
-    }
-
-    // =========================================================================
     // Helpers
     // =========================================================================
 
@@ -390,12 +78,189 @@ export class CloudflareClient implements ICloudflareClient {
 
     private get accountId(): string { return this.options.accountId }
 
-    private config(otherHeaders: any = {}): AxiosRequestConfig {
-        return {
-            headers: {
-                "Authorization": `Bearer ${this.apiKey}`,
-                ...otherHeaders,
-            },
+    private async request<TResponse>(requestArgs: RequestArgs): Promise<TResponse> {
+        try {
+            requestArgs = { ...defaultRequestArgs, ...requestArgs }
+            const {
+                operation,
+                urlArgs,
+                params,
+                headers,
+                body,
+            } = { ...defaultRequestArgs, ...requestArgs }
+            const config: AxiosRequestConfig = {
+                url: OperationUrls[operation](this.accountId, ...urlArgs),
+                method: OperationMethods[operation],
+                headers: {
+                    "Authorization": `Bearer ${this.apiKey}`,
+                    ...headers,
+                },
+            }
+            if (!isBlank(params)) { config.params = params }
+            if (!isBlank(body))   { config.data = body }
+            const response = await axios.request<TResponse>(config)
+            this.logResponse({ operation, response: response?.data })
+            return response.data
+        } catch (error) {
+            this.logError({ error, operation: requestArgs.operation })
+            throw error
         }
     }
+
+    // =========================================================================
+    // Images
+    // =========================================================================
+
+    public async createImageFromBuffer(request: Requests.CreateImage, buffer: Buffer): Promise<Responses.CreateImage> {
+        const {
+            id,
+            fileName,
+            metadata,
+            requireSignedURLs,
+        } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
+        const formData = new NpmFormData()
+        formData.append("id", id)
+        formData.append("file", buffer, fileName)
+        formData.append("requireSignedURLs", requireSignedURLs == true ? "true" : "false")
+        if (!isBlank(metadata)) {
+            formData.append("metadata", JSON.stringify(metadata), { contentType: "application/json" })
+        }
+        return await this.request({
+            operation: "image.create",
+            headers: { "Content-Type": "multipart/form-data" },
+            body: formData,
+        })
+    }
+
+    public async createImageFromFile(request: Requests.CreateImage, path: string): Promise<Responses.CreateImage> {
+        let {
+            id,
+            fileName,
+            metadata,
+            requireSignedURLs,
+        } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
+        fileName = isBlank(fileName) ? basename(path) : fileName
+        const file = await readFile(path)
+        const formData = new NpmFormData()
+        formData.append("id", id)
+        formData.append("file", file, fileName)
+        formData.append("requireSignedURLs", requireSignedURLs == true ? "true" : "false")
+        if (!isBlank(metadata)) {
+            formData.append("metadata", JSON.stringify(metadata), { contentType: "application/json" })
+        }
+        return await this.request({
+            operation: "image.create",
+            headers: { "Content-Type": "multipart/form-data" },
+            body: formData,
+        })
+    }
+
+    public async createImageFromUrl(request: Requests.CreateImage, imageUrl: string): Promise<Responses.CreateImage> {
+        const {
+            id,
+            fileName,
+            metadata,
+            requireSignedURLs,
+        } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
+        const formData = new NpmFormData()
+        formData.append("id", id)
+        formData.append("fileName", fileName)
+        formData.append("url", imageUrl)
+        formData.append("metadata", metadata)
+        formData.append("requireSignedURLs", requireSignedURLs)
+        return await this.request({
+            operation: "image.create",
+            headers: { "Content-Type": "multipart/form-data" },
+            body: formData,
+        })
+    }
+
+    public async listImages(request: Requests.ListImages = {}): Promise<Responses.ListImages> {
+        return await this.request({
+            operation: "image.list",
+            params: {
+                ...DefaultRequests["image.list"],
+                ...request,
+            },
+        })
+    }
+
+    public async getImage(imageId: string): Promise<Responses.GetImage> {
+        return await this.request({
+            operation: "image.get",
+            urlArgs: [imageId],
+        })
+    }
+
+    public async downloadImage(imageId: string): Promise<Blob> {
+        return await this.request({
+            operation: "image.download",
+            urlArgs: [imageId],
+        })
+    }
+
+    public async updateImage(imageId: string, options: Requests.UpdateImage): Promise<Responses.UpdateImage> {
+        return await this.request({
+            operation: "image.update",
+            urlArgs: [imageId],
+            body: options,
+        })
+    }
+
+    public async deleteImage(imageId: string): Promise<Responses.DeleteImage> {
+        return await this.request({
+            operation: "image.delete",
+            urlArgs: [imageId],
+        })
+    }
+
+    // =========================================================================
+    // Variants
+    // =========================================================================
+
+    public async createVariant(options: Requests.CreateVariant): Promise<Responses.CreateVariant> {
+        return await this.request({
+            operation: "variant.create",
+            body: options,
+        })
+    }
+
+    public async listVariants(): Promise<Responses.ListVariants> {
+        return await this.request({
+            operation: "variant.list",
+        })
+    }
+
+    public async getVariant(variantId: string): Promise<Responses.GetVariant> {
+        return await this.request({
+            operation: "variant.get",
+            urlArgs: [variantId],
+        })
+    }
+
+    public async updateVariant(variantId: string, options: Requests.UpdateVariant): Promise<Responses.UpdateVariant> {
+        return await this.request({
+            operation: "variant.update",
+            urlArgs: [variantId],
+            body: options,
+        })
+    }
+
+    public async deleteVariant(variantId: string): Promise<Responses.DeleteVariant> {
+        return await this.request({
+            operation: "variant.delete",
+            urlArgs: [variantId],
+        })
+    }
+
+    // =========================================================================
+    // Misc.
+    // =========================================================================
+
+    public async getStats(): Promise<Responses.UsageStatistics> {
+        return await this.request({
+            operation: "usageStatistics.get",
+        })
+    }
+
 }
