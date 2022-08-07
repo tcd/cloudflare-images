@@ -14,6 +14,7 @@ import {
 import { isBlank } from "./is-blank"
 import { DefaultRequests } from "./DefaultRequests"
 import { OperationMethods, OperationRequests, OperationUrls } from "./data"
+import { CloudflareException, isAxiosError } from "./errors"
 
 interface LogErrorArgs {
     operation: Operation
@@ -51,7 +52,6 @@ const defaultRequestArgs: RequestArgs = {
  */
 export class CloudflareClient implements ICloudflareClient {
 
-    private BASE_URL = "https://api.cloudflare.com/client/v4"
     private options: CloudflareClientOptions
     private logger?: Logging.ILogger
 
@@ -95,6 +95,10 @@ export class CloudflareClient implements ICloudflareClient {
                     "Authorization": `Bearer ${this.apiKey}`,
                     ...headers,
                 },
+                // validateStatus: function (_status: number): boolean {
+                //     // return status >= 200 && status < 300; // default
+                //     return true;
+                // },
             }
             if (!isBlank(params)) { config.params = params }
             if (!isBlank(body))   { config.data = body }
@@ -102,8 +106,16 @@ export class CloudflareClient implements ICloudflareClient {
             this.logResponse({ operation, response: response?.data })
             return response.data
         } catch (error) {
-            this.logError({ error, operation: requestArgs.operation })
-            throw error
+            if (isAxiosError(error)) {
+                const cloudflareError = new CloudflareException(error)
+                if (cloudflareError.isCloudflareError) {
+                    this.logError({ error: cloudflareError, operation: requestArgs.operation })
+                    throw cloudflareError
+                } else {
+                    this.logError({ error, operation: requestArgs.operation })
+                    throw error
+                }
+            }
         }
     }
 

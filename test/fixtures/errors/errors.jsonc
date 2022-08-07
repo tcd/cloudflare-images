@@ -1,4 +1,5 @@
 [
+    "not an error",
     // Invalid variant create attempt
     "ERROR 5400: Bad request: 'xxx' is not a supported fit mode. Use 'cover', 'contain' or 'scale-down'",
     // conflict (uploading an image with an id that already exists)

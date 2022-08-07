@@ -23,6 +23,7 @@ export const ErrorCodes = {
     "5543":  "Error during audit.",
     "5544":  "Error during abuse operation.",
     "5550":  "Internal Server Error.",
+    "9422":  "Decode Error",
     "10000": "Authentication error",
 } as const
 

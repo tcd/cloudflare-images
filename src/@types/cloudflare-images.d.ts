@@ -12,8 +12,8 @@ declare module "cloudflare-images" {
         export type Metadata = Record<string, any>
 
         export interface CloudflareError {
-            code: number
-            message: string
+            code?: string
+            message?: string
         }
 
         export type Operation =

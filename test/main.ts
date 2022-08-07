@@ -1,12 +1,14 @@
 import "dotenv/config"
 
 import { Tests } from "./Tests"
+import { ErrorTests } from "./ErrorTests"
 
 const main = async (): Promise<any> => {
-    const tests = new Tests()
+    // const tests = new Tests()
     // await tests.test("image.get")
     // await tests.test("image.create")
-    await tests.test("image.delete")
+    // await tests.test("image.delete")
+    ErrorTests.match()
 }
 
 (async () => {
