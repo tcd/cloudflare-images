@@ -16,6 +16,8 @@ declare module "cloudflare-images" {
             message?: string
         }
 
+        // export function isCloudflareError(value: any): value is ICloudflareError
+
         export type Operation =
             | "image.list"
             | "image.get"
