@@ -17,7 +17,7 @@ export const OperationUrls: Record<Operation, any> = {
     "variant.get":         (accountId: string, variantId: string) => urlJoin(BASE_URL, "accounts", accountId, "images", "v1", "variants", variantId),
     "variant.update":      (accountId: string, variantId: string) => urlJoin(BASE_URL, "accounts", accountId, "images", "v1", "variants", variantId),
     "variant.delete":      (accountId: string, variantId: string) => urlJoin(BASE_URL, "accounts", accountId, "images", "v1", "variants", variantId),
-    "usageStatistics.get": (accountId: string)                    => urlJoin(BASE_URL, "accounts", accountId, "images", "v1", "variants"),
+    "usageStatistics.get": (accountId: string)                    => urlJoin(BASE_URL, "accounts", accountId, "images", "v1", "stats"),
 }
 
 export const OperationMethods: Record<Operation, Method> = {

@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog][keep-a-changelog], and this project adheres to [Semantic Versioning][semver].
 
 
+## [1.2.1] - 2022-08-09
+### Fixed
+- Fix incorrect url for `CloudflareClient#getStats`.
+
+
 ## [1.2.0] - 2022-08-07
 ### Added
 - Catch and wrap error data from cloudflare.
@@ -97,7 +102,10 @@ The format is based on [Keep a Changelog][keep-a-changelog], and this project ad
 - Claimed package name on npm
 
 
-[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/tcd/cloudflare-images/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/tcd/cloudflare-images/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/tcd/cloudflare-images/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/tcd/cloudflare-images/compare/v0.7.0...v1.0.0
 [0.7.0]: https://github.com/tcd/cloudflare-images/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/tcd/cloudflare-images/compare/v0.5.0...v0.6.0
