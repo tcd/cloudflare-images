@@ -57,7 +57,7 @@ export class CloudflareClient implements ICloudflareClient {
                 fileName,
                 metadata,
                 requireSignedURLs,
-            } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
+            } = { ...DefaultRequests["image.create"]() as Requests.CreateImage, ...request }
             const formData = new NpmFormData()
             formData.append("id", id)
             formData.append("file", buffer, fileName)
@@ -91,7 +91,7 @@ export class CloudflareClient implements ICloudflareClient {
                 fileName,
                 metadata,
                 requireSignedURLs,
-            } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
+            } = { ...DefaultRequests["image.create"]() as Requests.CreateImage, ...request }
             fileName = isBlank(fileName) ? basename(path) : fileName
             const file = await readFile(path)
             const formData = new NpmFormData()
@@ -130,7 +130,10 @@ export class CloudflareClient implements ICloudflareClient {
                 fileName,
                 metadata,
                 requireSignedURLs,
-            } = { ...DefaultRequests["image.create"] as Requests.CreateImage, ...request }
+            } = { ...DefaultRequests["image.create"]() as Requests.CreateImage, ...request }
+
+            metadata
+
             const formData = new NpmFormData()
             formData.append("id", id)
             formData.append("fileName", fileName)
@@ -152,12 +155,37 @@ export class CloudflareClient implements ICloudflareClient {
         }
     }
 
+    public async createDirectUpload(request: Requests.CreateDirectUpload = {}) {
+        const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v2", "direct_upload")
+        const config: AxiosRequestConfig = {
+            ...this.config(),
+            data: {
+                ...DefaultRequests["image.createDirectUpload"](),
+                ...request,
+            },
+        }
+        try {
+            const response = await axios.post<Responses.CreateDirectUpload>(url, null, config)
+            this.logResponse({
+                operation: "image.createDirectUpload",
+                response: response?.data,
+            })
+            return response.data
+        } catch (error) {
+            this.logError({
+                error,
+                operation: "image.createDirectUpload",
+            })
+            throw error
+        }
+    }
+
     public async listImages(request: Requests.ListImages = {}): Promise<Responses.ListImages> {
         const url = urlJoin(this.BASE_URL, "accounts", this.accountId, "images", "v1")
         const config: AxiosRequestConfig = {
             ...this.config(),
             params: {
-                ...DefaultRequests["image.list"],
+                ...DefaultRequests["image.list"](),
                 ...request,
             },
         }
