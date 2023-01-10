@@ -205,12 +205,12 @@ declare module "cloudflare-images" {
 
             export type EmptyResponse<T = unknown> = Omit<Response<T>, "result_info">
 
-            export type ListImages      = Response<Images.ListImagesResult>
-            export type GetImage        = Response<Images.Image>
-            export type CreateImage = Response<Images.Image>
+            export type ListImages         = Response<Images.ListImagesResult>
+            export type GetImage           = Response<Images.Image>
+            export type CreateImage        = Response<Images.Image>
             export type CreateDirectUpload = Response<Images.CreateDirectUploadResult>
-            export type UpdateImage     = Response<Images.Image>
-            export type DeleteImage     = EmptyResponse
+            export type UpdateImage        = Response<Images.Image>
+            export type DeleteImage        = EmptyResponse
 
             export type ListVariants    = Response<Variants.ListVariantsResult>
             export type GetVariant      = Response<Variants.GetVariantResult>
