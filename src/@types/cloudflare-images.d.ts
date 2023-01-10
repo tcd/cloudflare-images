@@ -20,6 +20,7 @@ declare module "cloudflare-images" {
             | "image.list"
             | "image.get"
             | "image.create"
+            | "image.createDirectUpload"
             | "image.update"
             | "image.delete"
             | "image.download"
@@ -97,6 +98,11 @@ declare module "cloudflare-images" {
 
             export interface ListImagesResult {
                 images: Image[]
+            }
+            
+            export interface CreateDirectUploadResult {
+                id: string,
+                uploadURL: string,
             }
         }
 
@@ -201,7 +207,8 @@ declare module "cloudflare-images" {
 
             export type ListImages      = Response<Images.ListImagesResult>
             export type GetImage        = Response<Images.Image>
-            export type CreateImage     = Response<Images.Image>
+            export type CreateImage = Response<Images.Image>
+            export type CreateDirectUpload = Response<Images.CreateDirectUploadResult>
             export type UpdateImage     = Response<Images.Image>
             export type DeleteImage     = EmptyResponse
 
@@ -248,6 +255,31 @@ declare module "cloudflare-images" {
                 //  * Mutually exclusive with `file` parameter.
                 //  */
                 // url?: string
+            }
+            export interface CreateDirectUpload {
+                /**
+                 * Expiry date of the URL
+                 *
+                 * The ISO date after which the upload will not be accepted
+                 * 
+                 * Minimum: Now + 2 minutes
+                 * Maximum: Now + 6 hours
+                 * 
+                 * @default Now + 30 minutes
+                 */
+                expiry?: string,
+                /**
+                 * User modifiable key-value store.
+                 *
+                 * Can use used for keeping references to another system of record for managing images.
+                 * @default {}
+                 */
+                metadata?: Metadata
+                /**
+                 * Indicates whether the image requires a signature token for the access.
+                 * @default false
+                 */
+                requireSignedURLs?: boolean
             }
             export interface ListImages {
                 /**

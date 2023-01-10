@@ -10,6 +10,7 @@ export type CloudflareOperation =
     | "image.create"
     | "image.update"
     | "image.delete"
+    | "image.createDirectUpload"
     | "variant.list"
     | "variant.get"
     | "variant.create"
@@ -34,11 +35,12 @@ export class Tests {
             // -----------------------------------------------------------------
             // Images
             // -----------------------------------------------------------------
-            case "image.list":   response = await this.listImages(); break
-            case "image.get":    response = await this.getImage("testing/w3c"); break
-            case "image.create": response = await this.createImage(); break
-            case "image.update": response = await this.updateImage("misc/random-bullshit"); break
-            case "image.delete": response = await this.deleteImage("testing/w3c"); break
+            case "image.list":               response = await this.listImages(); break
+            case "image.get":                response = await this.getImage("testing/w3c"); break
+            case "image.create":             response = await this.createImage(); break
+            case "image.createDirectUpload": response = await this.createDirectUpload(); break
+            case "image.update":             response = await this.updateImage("misc/random-bullshit"); break
+            case "image.delete":             response = await this.deleteImage("testing/w3c"); break
             // -----------------------------------------------------------------
             // Variants
             // -----------------------------------------------------------------
@@ -60,6 +62,11 @@ export class Tests {
         return null
     }
 
+
+    async createDirectUpload(): Promise<any> {
+        return this.client.createDirectUpload()
+    }
+
     // =========================================================================
     // Upload Image
     // =========================================================================
@@ -67,6 +74,7 @@ export class Tests {
     async createImage(): Promise<any> {
         return this.fromFile()
     }
+    
 
     async fromBuffer(): Promise<any> {
         const path = join(__dirname, "fixtures", "images", "w3c_home.png")
